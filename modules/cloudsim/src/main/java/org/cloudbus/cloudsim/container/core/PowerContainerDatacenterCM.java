@@ -234,6 +234,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
 //    here we override the method
         if (ev.getData() instanceof Map) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> map = (Map<String, Object>) ev.getData();
             ContainerVm containerVm = (ContainerVm) map.get("vm");
             ContainerHost host = (ContainerHost) map.get("host");

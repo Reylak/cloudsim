@@ -5,7 +5,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPeProvisionerSimple;
@@ -39,7 +39,7 @@ public class HelperEx {
 
     public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, String inputFolderName, int numberOfCloudlets)
             throws FileNotFoundException {
-        ArrayList cloudletList = new ArrayList();
+        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<ContainerCloudlet>();
         long fileSize = 300L;
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
@@ -78,7 +78,7 @@ public class HelperEx {
 
     // create the containers for hosting the cloudlets and binding them together.
     public static List<Container> createContainerList(int brokerId, int containersNumber) {
-        ArrayList containers = new ArrayList();
+        ArrayList<Container> containers = new ArrayList<Container>();
 
         for (int i = 0; i < containersNumber; ++i) {
 //            int containerType = new RandomGen().getNum(ConstantsExamples.CONTAINER_TYPES);
@@ -96,10 +96,10 @@ public class HelperEx {
 
     // create the containers for hosting the cloudlets and binding them together.
     public static List<ContainerVm> createVmList(int brokerId, int containerVmsNumber) {
-        ArrayList containerVms = new ArrayList();
+        ArrayList<ContainerVm> containerVms = new ArrayList<ContainerVm>();
 
         for (int i = 0; i < containerVmsNumber; ++i) {
-            ArrayList peList = new ArrayList();
+            ArrayList<ContainerPe> peList = new ArrayList<ContainerPe>();
 //            int vmType = new RandomGen().getNum(ConstantsExamples.VM_TYPES);
 //            Log.print(vmType);
 //            Log.print("\n");
@@ -108,9 +108,9 @@ public class HelperEx {
             //            int vmType = 1;
 
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
-                peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
+                peList.add(new ContainerPe(j, new ContainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
             }
-            containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+            containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
                     new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
                     new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
@@ -123,13 +123,13 @@ public class HelperEx {
 
 
     public static List<ContainerHost> createHostList(int hostsNumber) {
-        ArrayList hostList = new ArrayList();
+        ArrayList<ContainerHost> hostList = new ArrayList<ContainerHost>();
         for (int i = 0; i < hostsNumber; ++i) {
 //            int hostType =  new RandomGen().getNum(ConstantsExamples.HOST_TYPES);
             int hostType = i / (int) Math.ceil((double) hostsNumber / 3.0D);
 //            int hostType = i % 2;
 //            int hostType = 2;
-            ArrayList peList = new ArrayList();
+            ArrayList<ContainerVmPe> peList = new ArrayList<ContainerVmPe>();
 
             for (int j = 0; j < ConstantsExamples.HOST_PES[hostType]; ++j) {
                 peList.add(new ContainerVmPe(j, new ContainerVmPeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));

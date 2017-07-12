@@ -184,7 +184,7 @@ public abstract class RunnerAbs {
             ;
             CloudSim.terminateSimulation(86400.0D);
             double lastClock = CloudSim.startSimulation();
-            List newList = broker.getCloudletReceivedList();
+            List<ContainerCloudlet> newList = broker.getCloudletReceivedList();
             Log.printLine("Received " + newList.size() + " cloudlets");
             CloudSim.stopSimulation();
 
@@ -390,7 +390,7 @@ public abstract class RunnerAbs {
     }
 
     public void setEnableOutput(boolean enableOutput) {
-        this.enableOutput = enableOutput;
+        enableOutput = enableOutput;
     }
 
     public boolean isEnableOutput() {

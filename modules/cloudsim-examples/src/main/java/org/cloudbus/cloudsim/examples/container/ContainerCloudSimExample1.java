@@ -18,7 +18,7 @@ import org.cloudbus.cloudsim.UtilizationModelNull;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPeProvisionerSimple;
@@ -293,10 +293,10 @@ public class ContainerCloudSimExample1 {
             int vmType = i / (int) Math.ceil((double) containerVmsNumber / 4.0D);
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j,
-                        new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
+                        new ContainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId,
-                    (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+                    ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
                     new ContainerSchedulerTimeSharedOverSubscription(peList),
                     new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),

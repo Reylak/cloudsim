@@ -1,7 +1,7 @@
 /*
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
- * 
+ *
  * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
@@ -17,7 +17,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * to run its {@link Cloudlet Cloudlets}.
  * Cloudlets execute in time-shared manner in VM.
  * Each VM has to have its own instance of a CloudletScheduler.
- * 
+ *
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
@@ -31,7 +31,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Creates a new CloudletSchedulerTimeShared object. This method must be invoked before starting
 	 * the actual simulation.
-	 * 
+	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -87,7 +87,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Gets the individual MIPS capacity available for each PE available for the scheduler,
          * considering that all PEs have the same capacity.
-	 * 
+	 *
 	 * @param mipsShare list with MIPS share of each PE available to the scheduler
 	 * @return the capacity of each PE
 	 */
@@ -267,12 +267,12 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	public int getCloudletStatus(int cloudletId) {
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 		return -1;
@@ -281,7 +281,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	@Override
 	public double getTotalUtilizationOfCpu(double time) {
                 /*
-                 * @todo 
+                 * @todo
                  */
 		double totalUtilization = 0;
 		for (ResCloudlet gl : getCloudletExecList()) {

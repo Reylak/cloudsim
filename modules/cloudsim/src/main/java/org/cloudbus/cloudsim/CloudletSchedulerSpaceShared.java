@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * We consider that file transfer from cloudlets waiting happens before cloudlet execution. I.e.,
  * even though cloudlets must wait for CPU, data transfer happens as soon as cloudlets are
  * submitted.
- * 
+ *
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
@@ -37,7 +37,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Creates a new CloudletSchedulerSpaceShared object. This method must be invoked before
 	 * starting the actual simulation.
-	 * 
+	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -345,19 +345,19 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	public int getCloudletStatus(int cloudletId) {
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 
 		for (ResCloudlet rcl : getCloudletWaitingList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 
@@ -393,11 +393,11 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	/**
 	 * Returns the first cloudlet to migrate to another VM.
-	 * 
+	 *
 	 * @return the first running cloudlet
 	 * @pre $none
 	 * @post $none
-         * 
+         *
          * @todo it doesn't check if the list is empty
 	 */
 	@Override
@@ -437,7 +437,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	}
 
 	@Override
-	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {   
+	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
                 //@todo the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0.0;

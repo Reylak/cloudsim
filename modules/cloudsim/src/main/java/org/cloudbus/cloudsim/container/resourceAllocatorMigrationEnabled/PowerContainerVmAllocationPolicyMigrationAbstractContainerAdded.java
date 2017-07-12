@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.core.ContainerHostList;
@@ -44,7 +44,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         super(hostList, vmSelectionPolicy);
 //        setDatacenter(datacenter);
         setContainerSelectionPolicy(containerSelectionPolicy);
-        
+
         this.numberOfVmTypes = numberOfVmTypes;
         this.vmPes = vmPes;
         this.vmRam = vmRam;
@@ -318,7 +318,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             if (getUtilizationOfCpuMips((PowerContainerHost) host) != 0 && isHostOverUtilizedAfterAllocation((PowerContainerHost) host, vm)) {
                 continue;
             }
-            
+
             if(allocateHostForVm(vm, host)){
                 Log.printLine("The vm ID #" + vm.getId() + "will be created ");
                 vm.setInWaiting(vmStatus);
@@ -508,10 +508,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 //            int vmType = 1;
 //        Log.print(vmType);
         for (int j = 0; j < vmPes[vmType]; ++j) {
-            peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) vmMips[vmType])));
+            peList.add(new ContainerPe(j, new ContainerPeProvisionerSimple(vmMips[vmType])));
         }
         int brokerId = 2;
-        PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) vmMips[vmType],
+        PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, vmMips[vmType],
                 vmRam[vmType],
                 vmBw, vmSize, "Xen",
                 new ContainerSchedulerTimeSharedOverSubscription(peList),

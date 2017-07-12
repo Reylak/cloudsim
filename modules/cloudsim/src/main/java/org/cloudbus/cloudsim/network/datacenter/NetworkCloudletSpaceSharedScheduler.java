@@ -22,14 +22,14 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 
 /**
  * CloudletSchedulerSpaceShared implements a policy of scheduling performed by a virtual machine
- * to run its {@link Cloudlet Cloudlets}. 
+ * to run its {@link Cloudlet Cloudlets}.
  * It consider that there will be only one cloudlet per VM. Other cloudlets will be in a waiting list.
  * We consider that file transfer from cloudlets waiting happens before cloudlet execution. I.e.,
  * even though cloudlets must wait for CPU, data transfer happens as soon as cloudlets are
  * submitted.
- * 
+ *
  * Each VM has to have its own instance of a CloudletScheduler.
- * 
+ *
  * @author Saurabh Kumar Garg
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
@@ -55,9 +55,9 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	public Map<Integer, List<HostPacket>> pktrecv;
 
 	/**
-	 * Creates a new CloudletSchedulerSpaceShared object. 
+	 * Creates a new CloudletSchedulerSpaceShared object.
          * This method must be invoked before starting the actual simulation.
-	 * 
+	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -219,7 +219,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
         /**
          * Changes a cloudlet to the next stage.
-         * 
+         *
          * @todo It has to be corrected the method name case. Method too long
          * to understand what is its responsibility.*/
 	private void changetonextstage(NetworkCloudlet cl, TaskStage st) {
@@ -497,19 +497,19 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	public int getCloudletStatus(int cloudletId) {
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 
 		for (ResCloudlet rcl : getCloudletWaitingList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				return rcl.getCloudletStatus();
+				return rcl.getStatus();
 			}
 		}
 

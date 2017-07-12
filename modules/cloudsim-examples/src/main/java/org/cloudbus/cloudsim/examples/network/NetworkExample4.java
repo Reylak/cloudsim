@@ -120,7 +120,7 @@ public class NetworkExample4 {
 
 			//maps CloudSim entities to BRITE entities
 			NetworkTopology.addLink(datacenter0.getId(), broker.getId(),10.0,10);
-                        
+
 			// Seventh step: Starts the simulation
 			CloudSim.startSimulation();
 
@@ -234,7 +234,7 @@ public class NetworkExample4 {
 			cloudlet = list.get(i);
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS){
 				Log.print("SUCCESS");
 
 				DecimalFormat dft = new DecimalFormat("###.##");

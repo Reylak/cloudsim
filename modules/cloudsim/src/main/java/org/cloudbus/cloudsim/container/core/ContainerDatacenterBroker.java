@@ -314,6 +314,7 @@ public class ContainerDatacenterBroker extends SimEntity {
         }
     }
     protected void processNewVmCreate(SimEvent ev) {
+        @SuppressWarnings("unchecked")
         Map<String, Object> map = (Map<String, Object>) ev.getData();
         int datacenterId = (int) map.get("datacenterID");
         int result = (int) map.get("result");
@@ -901,8 +902,8 @@ public class ContainerDatacenterBroker extends SimEntity {
 
 //------------------------------------------------
 
+    @SuppressWarnings("unchecked")
     public <T extends Container> List<T> getContainerList() {
-
         return (List<T>) containerList;
     }
 
@@ -930,6 +931,7 @@ public class ContainerDatacenterBroker extends SimEntity {
         this.containersToDatacentersMap = containersToDatacentersMap;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Container> List<T> getContainersCreatedList() {
         return (List<T>) containersCreatedList;
     }
@@ -970,5 +972,3 @@ public class ContainerDatacenterBroker extends SimEntity {
         this.numberOfCreatedVMs = numberOfCreatedVMs;
     }
 }
-
-

@@ -83,13 +83,13 @@ public class TimeSharedProblemDetector {
 
 			// create VM
 			Vm vm = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-			
+
 			Vm vm1 = new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 			Vm vm2 = new Vm(2, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			// add the VM to the vmList
 			vmlist.add(vm);
-			
+
 			vmlist.add(vm1);
 			vmlist.add(vm2);
 
@@ -109,18 +109,18 @@ public class TimeSharedProblemDetector {
 			Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet.setUserId(brokerId);
 			cloudlet.setVmId(vmid);
-			
+
 			Cloudlet cloudlet1 = new Cloudlet(1, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet1.setUserId(brokerId);
 			cloudlet1.setVmId(1);
-			
+
 			Cloudlet cloudlet2 = new Cloudlet(2, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet2.setUserId(brokerId);
 			cloudlet2.setVmId(2);
-			
+
 
 			// add the cloudlet to the list
-			cloudletList.add(cloudlet);	
+			cloudletList.add(cloudlet);
 			cloudletList.add(cloudlet1);
 			cloudletList.add(cloudlet2);
 
@@ -255,7 +255,7 @@ public class TimeSharedProblemDetector {
 			cloudlet = list.get(i);
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 
 				Log.printLine(indent + indent + cloudlet.getResourceId()

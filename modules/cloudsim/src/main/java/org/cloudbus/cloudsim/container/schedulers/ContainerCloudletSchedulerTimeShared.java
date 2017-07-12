@@ -319,12 +319,12 @@ public class ContainerCloudletSchedulerTimeShared extends ContainerCloudletSched
     public int getCloudletStatus(int cloudletId) {
         for (ResCloudlet rcl : getCloudletExecList()) {
             if (rcl.getCloudletId() == cloudletId) {
-                return rcl.getCloudletStatus();
+                return rcl.getStatus();
             }
         }
         for (ResCloudlet rcl : getCloudletPausedList()) {
             if (rcl.getCloudletId() == cloudletId) {
-                return rcl.getCloudletStatus();
+                return rcl.getStatus();
             }
         }
         return -1;
@@ -458,8 +458,3 @@ public class ContainerCloudletSchedulerTimeShared extends ContainerCloudletSched
     }
 
 }
-
-
-
-
-

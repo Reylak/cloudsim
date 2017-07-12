@@ -281,7 +281,9 @@ public class ContainerDatacenter extends SimEntity {
         }
     }
 
+
     public void processContainerSubmit(SimEvent ev, boolean ack) {
+        @SuppressWarnings("unchecked")
         List<Container> containerList = (List<Container>) ev.getData();
 
         for (Container container : containerList) {
@@ -1311,7 +1313,7 @@ public class ContainerDatacenter extends SimEntity {
         this.containerAllocationPolicy = containerAllocationPolicy;
     }
 
-
+    @SuppressWarnings("unchecked")
     public <T extends Container> List<T> getContainerList() {
         return (List<T>) containerList;
     }
@@ -1337,5 +1339,3 @@ public class ContainerDatacenter extends SimEntity {
         this.logAddress = logAddress;
     }
 }
-
-

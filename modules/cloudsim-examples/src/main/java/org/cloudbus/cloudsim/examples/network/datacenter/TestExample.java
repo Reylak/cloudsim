@@ -33,7 +33,7 @@ public class TestExample {
 
 	/**
 	 * Creates main() to run this example.
-	 * 
+	 *
 	 * @param args
 	 *            the args
 	 */
@@ -56,7 +56,7 @@ public class TestExample {
 
 			// Third step: Create Broker
 			NetDatacenterBroker broker = createBroker();
-			broker.setLinkDC(datacenter0);
+			NetDatacenterBroker.setLinkDC(datacenter0);
 			// broker.setLinkDC(datacenter0);
 			// Fifth step: Create one Cloudlet
 
@@ -87,10 +87,10 @@ public class TestExample {
 
 	/**
 	 * Creates the datacenter.
-	 * 
+	 *
 	 * @param name
 	 *            the name
-	 * 
+	 *
 	 * @return the datacenter
 	 */
 	private static NetworkDatacenter createDatacenter(String name) {
@@ -235,7 +235,7 @@ public class TestExample {
 	// to the specific rules of the simulated scenario
 	/**
 	 * Creates the broker.
-	 * 
+	 *
 	 * @return the datacenter broker
 	 */
 	private static NetDatacenterBroker createBroker() {
@@ -251,7 +251,7 @@ public class TestExample {
 
 	/**
 	 * Prints the Cloudlet objects.
-	 * 
+	 *
 	 * @param list
 	 *            list of Cloudlets
 	 * @throws IOException
@@ -270,7 +270,7 @@ public class TestExample {
 			cloudlet = list.get(i);
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
