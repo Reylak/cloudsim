@@ -3,3 +3,5 @@ target/
 /.classpath
 *.jar
 /.idea/workspace.xml
+/.idea/dictionaries/
+/.idea/inspectionProfiles
