@@ -562,7 +562,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	protected double getPowerAfterAllocation(PowerHost host, Vm vm) {
 		double power = 0;
 		try {
-			power = host.getPowerModel().getPower(getMaxUtilizationAfterAllocation(host, vm));
+			power = host.getPower(getMaxUtilizationAfterAllocation(host, vm));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
