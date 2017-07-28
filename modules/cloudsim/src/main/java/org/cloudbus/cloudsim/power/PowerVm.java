@@ -115,7 +115,7 @@ public class PowerVm extends Vm {
 	}
 
 	/**
-	 * Gets the utilization mean in percents.
+	 * Gets the utilization mean in MIps.
 	 * 
 	 * @return the utilization mean in MIPS
 	 */
@@ -131,7 +131,7 @@ public class PowerVm extends Vm {
 			}
 			mean /= n;
 		}
-		return mean * getMips();
+		return mean * this.getMipsPerPe();
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class PowerVm extends Vm {
 				n = getUtilizationHistory().size();
 			}
 			for (int i = 0; i < n; i++) {
-				double tmp = getUtilizationHistory().get(i) * getMips() - mean;
+				double tmp = getUtilizationHistory().get(i) * this.getMipsPerPe() - mean;
 				variance += tmp * tmp;
 			}
 			variance /= n;

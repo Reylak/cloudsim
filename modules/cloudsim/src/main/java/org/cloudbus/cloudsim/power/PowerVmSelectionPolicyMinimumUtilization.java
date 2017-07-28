@@ -43,7 +43,7 @@ public class PowerVmSelectionPolicyMinimumUtilization extends PowerVmSelectionPo
 			if (vm.isInMigration()) {
 				continue;
 			}
-			double metric = vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) / vm.getMips();
+			double metric = vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) / vm.getTotalMips();
 			if (metric < minMetric) {
 				minMetric = metric;
 				vmToMigrate = vm;

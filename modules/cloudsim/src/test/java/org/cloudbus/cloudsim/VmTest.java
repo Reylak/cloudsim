@@ -56,13 +56,13 @@ public class VmTest {
 
 	@Test
 	public void testGetMips() {
-		assertEquals(MIPS, vm.getMips(), 0);
+		assertEquals(MIPS, vm.getMipsPerPe(), 0);
 	}
 
 	@Test
 	public void testSetMips() {
-		vm.setMips(MIPS / 2);
-		assertEquals(MIPS / 2, vm.getMips(), 0);
+		vm.setMipsPerPe(MIPS / 2);
+		assertEquals(MIPS / 2, vm.getMipsPerPe(), 0);
 	}
 
 	@Test

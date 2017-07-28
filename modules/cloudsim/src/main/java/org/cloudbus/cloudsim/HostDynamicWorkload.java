@@ -83,8 +83,8 @@ public class HostDynamicWorkload extends Host {
 						CloudSim.clock(),
 						totalAllocatedMips,
 						totalRequestedMips,
-						vm.getMips(),
-						totalRequestedMips / vm.getMips() * 100);
+						vm.getTotalMips(),
+						totalRequestedMips / vm.getTotalMips() * 100);
 
 				List<Pe> pes = getVmScheduler().getPesAllocatedForVM(vm);
 				StringBuilder pesString = new StringBuilder();

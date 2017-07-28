@@ -35,7 +35,7 @@ public class Vm {
 	private long size;
 
 	/** The MIPS capacity of each VM's PE. */
-	private double mips;
+	private double mipsPerPe;
 
 	/** The number of PEs required by the VM. */
 	private int numberOfPes;
@@ -67,13 +67,13 @@ public class Vm {
 	/** The current allocated bw. */
 	private long currentAllocatedBw;
 
-	/** The current allocated mips for each VM's PE. */
+	/** The current allocated mipsPerPe for each VM's PE. */
 	private List<Double> currentAllocatedMips;
 
 	/** Indicates if the VM is being instantiated. */
 	private boolean beingInstantiated;
 
-	/** The mips allocation history. 
+	/** The mipsPerPe allocation history.
          * @todo Instead of using a list, this attribute would be 
          * a map, where the key can be the history time
          * and the value the history itself. 
@@ -88,7 +88,7 @@ public class Vm {
 	 * 
 	 * @param id unique ID of the VM
 	 * @param userId ID of the VM's owner
-	 * @param mips the mips
+	 * @param mipsPerPe the mipsPerPe
 	 * @param numberOfPes amount of CPUs
 	 * @param ram amount of ram
 	 * @param bw amount of bandwidth
@@ -109,7 +109,7 @@ public class Vm {
 	public Vm(
 			int id,
 			int userId,
-			double mips,
+			double mipsPerPe,
 			int numberOfPes,
 			int ram,
 			long bw,
@@ -119,7 +119,7 @@ public class Vm {
 		setId(id);
 		setUserId(userId);
 		setUid(getUid(userId, id));
-		setMips(mips);
+		setMipsPerPe(mipsPerPe);
 		setNumberOfPes(numberOfPes);
 		setRam(ram);
 		setBw(bw);
@@ -154,25 +154,25 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the current requested mips.
+	 * Gets the current requested MIps.
 	 * 
-	 * @return the current requested mips
+	 * @return the current requested MIps
 	 */
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 		if (isBeingInstantiated()) {
 			currentRequestedMips = new ArrayList<Double>();
 			for (int i = 0; i < getNumberOfPes(); i++) {
-				currentRequestedMips.add(getMips());
+				currentRequestedMips.add(getMipsPerPe());
 			}
 		}
 		return currentRequestedMips;
 	}
 
 	/**
-	 * Gets the current requested total mips.
+	 * Gets the current requested total MIps.
 	 * 
-	 * @return the current requested total mips
+	 * @return the current requested total MIps
 	 */
 	public double getCurrentRequestedTotalMips() {
 		double totalRequestedMips = 0;
@@ -183,9 +183,9 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the current requested max mips among all virtual PEs.
+	 * Gets the current requested max MIps among all virtual PEs.
 	 * 
-	 * @return the current requested max mips
+	 * @return the current requested max MIps
 	 */
 	public double getCurrentRequestedMaxMips() {
 		double maxMips = 0;
@@ -239,7 +239,7 @@ public class Vm {
          * @see #getTotalUtilizationOfCpu(double) 
 	 */
 	public double getTotalUtilizationOfCpuMips(double time) {
-		return getTotalUtilizationOfCpu(time) * getMips();
+		return getTotalUtilizationOfCpu(time) * getMipsPerPe();
 	}
 
 	/**
@@ -310,21 +310,31 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the mips.
+	 * Gets the MIps of each PE available to the VM.
 	 * 
-	 * @return the mips
+	 * @return number of MIps of each VM's PE
 	 */
-	public double getMips() {
-		return mips;
+	public double getMipsPerPe() {
+		return mipsPerPe;
 	}
 
 	/**
-	 * Sets the mips.
+	 * Sets the mipsPerPe.
 	 * 
-	 * @param mips the new mips
+	 * @param mipsPerPe the new mipsPerPe
 	 */
-	protected void setMips(double mips) {
-		this.mips = mips;
+	protected void setMipsPerPe(double mipsPerPe) {
+		this.mipsPerPe = mipsPerPe;
+	}
+
+	/** Get the total number of MIps available to the VM.
+	 *
+	 * This is the cumulated number of MIps of each VM's PE.
+	 *
+	 * @return total number of MIps available to the VM
+	 */
+	public double getTotalMips() {
+		return this.getMipsPerPe() * this.getNumberOfPes();
 	}
 
 	/**
@@ -542,9 +552,9 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the current allocated mips.
+	 * Gets the current allocated mipsPerPe.
 	 * 
-	 * @return the current allocated mips
+	 * @return the current allocated mipsPerPe
 	 * @TODO replace returning the field by a call to getCloudletScheduler().getCurrentMipsShare()
 	 */
 	public List<Double> getCurrentAllocatedMips() {
@@ -552,9 +562,9 @@ public class Vm {
 	}
 
 	/**
-	 * Sets the current allocated mips.
+	 * Sets the current allocated mipsPerPe.
 	 * 
-	 * @param currentAllocatedMips the new current allocated mips
+	 * @param currentAllocatedMips the new current allocated mipsPerPe
 	 */
 	public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
 		this.currentAllocatedMips = currentAllocatedMips;
@@ -591,8 +601,8 @@ public class Vm {
 	 * Adds a VM state history entry.
 	 * 
 	 * @param time the time
-	 * @param allocatedMips the allocated mips
-	 * @param requestedMips the requested mips
+	 * @param allocatedMips the allocated mipsPerPe
+	 * @param requestedMips the requested mipsPerPe
 	 * @param isInMigration the is in migration
 	 */
 	public void addStateHistoryEntry(

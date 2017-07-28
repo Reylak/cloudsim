@@ -191,7 +191,7 @@ public class HostTest {
 //
 //		int[] mipsShare = { (int) (CLOUDLET_LENGTH / 2) };
 //		vmScheduler.setCurrentMipsShare(mipsShare);
-//		//vmScheduler.setMips(mipsShare[0]);
+//		//vmScheduler.setMipsPerPe(mipsShare[0]);
 //
 //		double utilization1 = utilizationModel1.getUtilization(0);
 //		double utilization2 = utilizationModel2.getUtilization(0);
