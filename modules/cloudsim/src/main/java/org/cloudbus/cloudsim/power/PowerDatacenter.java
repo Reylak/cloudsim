@@ -134,7 +134,7 @@ public class PowerDatacenter extends Datacenter {
 			// ensure a minimal time between simulation events
 			minTime = Math.max(minTime, CloudSim.clock() + CloudSim.getMinTimeBetweenEvents() + 0.01);
 			// set time of next event to scheduling date, or to date of next event if closer
-			minTime = Math.min(minTime, CloudSim.clock() + this.getSchedulingInterval());
+			minTime = Math.min(minTime, CloudSim.clock() + (this.getSchedulingInterval() - (CloudSim.clock() % this.getSchedulingInterval())));
 			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
 			send(getId(), minTime - CloudSim.clock(), CloudSimTags.VM_DATACENTER_EVENT);
 
