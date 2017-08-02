@@ -8,9 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
@@ -86,7 +84,7 @@ public class HostDynamicWorkload extends Host {
 						vm.getTotalMips(),
 						totalRequestedMips / vm.getTotalMips() * 100);
 
-				List<Pe> pes = getVmScheduler().getPesAllocatedForVM(vm);
+				Set<Pe> pes = getVmScheduler().getPesAllocatedForVM(vm);
 				StringBuilder pesString = new StringBuilder();
 				for (Pe pe : pes) {
 					pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getPeProvisioner()

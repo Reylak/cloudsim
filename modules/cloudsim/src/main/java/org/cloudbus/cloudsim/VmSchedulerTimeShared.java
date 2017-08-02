@@ -7,12 +7,8 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
@@ -135,7 +131,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
 			String vmUid = entry.getKey();
-			getPeMap().put(vmUid, new LinkedList<Pe>());
+			getPeMap().put(vmUid, new HashSet<>());
 
 			for (double mips : entry.getValue()) {
 				while (mips >= 0.1) {

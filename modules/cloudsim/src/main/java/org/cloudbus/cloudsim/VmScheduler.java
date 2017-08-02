@@ -7,10 +7,7 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -30,9 +27,14 @@ public abstract class VmScheduler {
 	/** The PEs of the host where the scheduler is associated. */
 	private List<? extends Pe> peList;
 
-	/** The map of VMs to PEs, where each key is a VM id and each value is 
-         * a list of PEs allocated to that VM. */
-	private Map<String, List<Pe>> peMap;
+	/** Mapping of VMs to their allocated PEs.
+	 *
+	 * Keys are VMs' UID, values are sets of PEs.
+	 *
+	 * Sets are used to guarantee a PE is only mapped once to a VM, even if it is allocated more than once (e.g. because
+	 * it hosts more than one virtual PE of the VM).
+	 */
+	private Map<String, Set<Pe>> peMap;
 
 	/** The map of VMs to MIPS, were each key is a VM id and each value is 
          * the currently allocated MIPS from the respective PE to that VM. 
@@ -64,7 +66,7 @@ public abstract class VmScheduler {
 	 */
 	public VmScheduler(List<? extends Pe> pelist) {
 		setPeList(pelist);
-		setPeMap(new HashMap<String, List<Pe>>());
+		setPeMap(new HashMap<>());
 		setMipsMap(new HashMap<String, List<Double>>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		setVmsMigratingIn(new ArrayList<String>());
@@ -113,7 +115,7 @@ public abstract class VmScheduler {
 	 * @param vm the vm
 	 * @return the pes allocated for the given vm
 	 */
-	public List<Pe> getPesAllocatedForVM(Vm vm) {
+	public Set<Pe> getPesAllocatedForVM(Vm vm) {
 		return getPeMap().get(vm.getUid());
 	}
 
@@ -284,7 +286,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @return the pe map
 	 */
-	public Map<String, List<Pe>> getPeMap() {
+	public Map<String, Set<Pe>> getPeMap() {
 		return peMap;
 	}
 
@@ -293,7 +295,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @param peMap the pe map
 	 */
-	protected void setPeMap(Map<String, List<Pe>> peMap) {
+	protected void setPeMap(Map<String, Set<Pe>> peMap) {
 		this.peMap = peMap;
 	}
 
