@@ -125,7 +125,7 @@ public class PowerDatacenter extends Datacenter {
 						// around 16 seconds for 1024 MB using 1 Gbit/s network
 						send(
 								getId(),
-								vm.getRam() / ((double) targetHost.getBw() / (2 * 8000)),
+								vm.getRam() / ((double) targetHost.getBw() / (2 * 8)),
 								CloudSimTags.VM_MIGRATE,
 								migrate);
 					}
