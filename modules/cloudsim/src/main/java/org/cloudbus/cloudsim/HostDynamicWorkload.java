@@ -76,7 +76,7 @@ public class HostDynamicWorkload extends Host {
 			if (!Log.isDisabled()) {
 				Log.formatLine(
 						"%.2f: [Host #" + getId() + "] Total allocated MIPS for VM #" + vm.getId()
-								+ " (Host #" + vm.getHost().getId()
+								+ " (Host #" + this.getId()
 								+ ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)",
 						CloudSim.clock(),
 						totalAllocatedMips,
