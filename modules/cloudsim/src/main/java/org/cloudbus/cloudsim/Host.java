@@ -260,19 +260,11 @@ public class Host {
 		}
 	}
 
-	/**
-	 * Destroys all VMs running in the host.
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
+	/** Destroy all the VMs running on this host. */
 	public void vmDestroyAll() {
-		vmDeallocateAll();
-		for (Vm vm : getVmList()) {
-			vm.setHost(null);
-			setStorage(getStorage() + vm.getSize());
-		}
-		getVmList().clear();
+		/* Make a copy of the list of VMs so vmDestroy can remove them from it. */
+		for (Vm vm: new ArrayList<Vm>(this.getVmList()))
+			this.vmDestroy(vm);
 	}
 
 	/**
@@ -285,15 +277,6 @@ public class Host {
 		getBwProvisioner().deallocateBwForVm(vm);
 		getVmScheduler().deallocatePesForVm(vm);
 		setStorage(getStorage() + vm.getSize());
-	}
-
-	/**
-	 * Deallocate all resources of all VMs.
-	 */
-	protected void vmDeallocateAll() {
-		getRamProvisioner().deallocateRamForAllVms();
-		getBwProvisioner().deallocateBwForAllVms();
-		getVmScheduler().deallocatePesForAllVms();
 	}
 
 	/**
