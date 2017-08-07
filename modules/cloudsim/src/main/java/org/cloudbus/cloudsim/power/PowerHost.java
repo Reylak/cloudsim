@@ -104,20 +104,30 @@ public class PowerHost extends HostDynamicWorkload {
 	}
 
 	/**
-	 * Gets the energy consumption using linear interpolation of the utilization change.
+	 * Get the energy consumption of this host, using linear interpolation.
 	 * 
-	 * @param fromUtilization the initial utilization percentage
-	 * @param toUtilization the final utilization percentage
-	 * @param time the time
-	 * @return the energy
+	 * @param fromUtilization initial utilization percentage
+	 * @param toUtilization final utilization percentage
+	 * @param time duration of the time frame (seconds)
+	 * @return energy consumption of the host during the time frame (Watt.seconds)
 	 */
-	public double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
+	protected double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
 		if (fromUtilization == 0) {
 			return 0;
 		}
 		double fromPower = getPower(fromUtilization);
 		double toPower = getPower(toUtilization);
 		return (fromPower + (toPower - fromPower) / 2) * time;
+	}
+
+	/** Get the energy consumption of this host during the given time frame.
+	 *
+	 * @param dateFrom start date of the time frame (simulation time), inclusive
+	 * @param dateTo end date of the time frame (simulation time), exclusive
+	 * @return energy consumption of the host during the time frame (Watt.seconds)
+	 */
+	public double getEnergyConsumption(double dateFrom, double dateTo) {
+		return this.getEnergyLinearInterpolation(this.getPreviousUtilizationOfCpu(), this.getUtilizationOfCpu(), dateTo - dateFrom);
 	}
 
 	/**

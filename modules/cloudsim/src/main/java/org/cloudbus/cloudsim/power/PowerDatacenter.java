@@ -195,27 +195,10 @@ public class PowerDatacenter extends Datacenter {
 					currentTime);
 
 			for (PowerHost host : this.<PowerHost> getHostList()) {
-				double previousUtilizationOfCpu = host.getPreviousUtilizationOfCpu();
-				double utilizationOfCpu = host.getUtilizationOfCpu();
-				double timeFrameHostEnergy = host.getEnergyLinearInterpolation(
-						previousUtilizationOfCpu,
-						utilizationOfCpu,
-						timeDiff);
+				double timeFrameHostEnergy = host.getEnergyConsumption(this.getLastProcessTime(), currentTime - 1);
 				timeFrameDatacenterEnergy += timeFrameHostEnergy;
 
-				Log.printLine();
-				Log.formatLine(
-						"%.2f: [Host #%d] utilization at %.2f was %.2f%%, now is %.2f%%",
-						currentTime,
-						host.getId(),
-						getLastProcessTime(),
-						previousUtilizationOfCpu * 100,
-						utilizationOfCpu * 100);
-				Log.formatLine(
-						"%.2f: [Host #%d] energy is %.2f W*sec",
-						currentTime,
-						host.getId(),
-						timeFrameHostEnergy);
+				Log.formatLine("[INFO] Host %d: %.2fWs", host.getId(), timeFrameHostEnergy);
 			}
 
 			Log.formatLine(
