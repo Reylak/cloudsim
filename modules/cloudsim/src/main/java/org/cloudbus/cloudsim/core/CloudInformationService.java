@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Log;
-
 /**
  * A Cloud Information Service (CIS) is an entity that provides cloud resource registration,
  * indexing and discovery services. The Cloud hostList tell their readiness to process Cloudlets by
@@ -232,25 +230,19 @@ public class CloudInformationService extends SimEntity {
 
 	// //////////////////////// PROTECTED METHODS ////////////////////////////
 
-	/**
-	 * Process non-default received events that aren't processed by
-         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
-         * This method should be overridden by subclasses in other to process
-         * new defined events.
-	 * 
-	 * @param ev a SimEvent object
-	 * @pre ev != null
-	 * @post $none
+	/** Process non default received events that couldn't be processed by {@link #processEvent(SimEvent)}.
+	 *
+	 * Override this method to process custom events.
+	 *
+	 * @param ev event to process
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine("CloudInformationService.processOtherEvent(): ",
-					"Unable to handle a request since the event is null.");
+			getLogger().warn("received null event");
 			return;
 		}
 
-		Log.printLine("CloudInformationSevice.processOtherEvent(): " + "Unable to handle a request from "
-				+ CloudSim.getEntityName(ev.getSource()) + " with event tag = " + ev.getTag());
+		getLogger().warn("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
 	}
 
 	/**
@@ -301,7 +293,7 @@ public class CloudInformationService extends SimEntity {
 	 * @post $none
 	 */
 	private void notifyAllEntity() {
-		Log.printConcatLine(super.getName(), ": Notify all CloudSim entities for shutting down.");
+		getLogger().info("notifying all entities to shut down");
 
 		signalShutdown(resList);
 		signalShutdown(gisList);

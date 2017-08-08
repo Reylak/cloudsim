@@ -8,11 +8,13 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
+import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
 
 /**
  * An implementation of a storage system. It simulates the behavior of a typical hard drive storage.
@@ -57,6 +59,9 @@ public class HarddriveStorage implements Storage {
 	/** The average seek time in seconds. */
 	private double avgSeekTime;
 
+	/** The logger used by the entity to log its own log messages. */
+	private EntityPrefixedLogger logger;
+
 	/**
 	 * Creates a new hard drive storage with a given name and capacity.
 	 * 
@@ -76,6 +81,8 @@ public class HarddriveStorage implements Storage {
 		this.name = name;
 		this.capacity = capacity;
 		init();
+
+		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "hard drive {}: ", this);
 	}
 
 	/**
@@ -92,6 +99,8 @@ public class HarddriveStorage implements Storage {
 		name = "HarddriveStorage";
 		this.capacity = capacity;
 		init();
+
+		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "hard drive {}: ", this);
 	}
 
 	/**
@@ -289,7 +298,7 @@ public class HarddriveStorage implements Storage {
 		// check first whether file name is valid or not
 		File obj = null;
 		if (fileName == null || fileName.length() == 0) {
-			Log.printConcatLine(name, ".getFile(): Warning - invalid " + "file name.");
+			getLogger().error("invalid filename {}", fileName);
 			return obj;
 		}
 
@@ -378,13 +387,13 @@ public class HarddriveStorage implements Storage {
 	private boolean isFileValid(File file, String methodName) {
 
 		if (file == null) {
-			Log.printConcatLine(name, ".", methodName, ": Warning - the given file is null.");
+			getLogger().debug("file is null");
 			return false;
 		}
 
 		String fileName = file.getName();
 		if (fileName == null || fileName.length() == 0) {
-			Log.printConcatLine(name, "." + methodName, ": Warning - invalid file name.");
+			getLogger().debug("invalid filename for file {}");
 			return false;
 		}
 
@@ -410,7 +419,7 @@ public class HarddriveStorage implements Storage {
 
 		// check the capacity
 		if (file.getSize() + currentSize > capacity) {
-			Log.printConcatLine(name, ".addFile(): Warning - not enough space to store ", file.getName());
+			getLogger().error("not enough space to store file {}", file);
 			return result;
 		}
 
@@ -432,7 +441,7 @@ public class HarddriveStorage implements Storage {
 	public double addFile(List<File> list) {
 		double result = 0.0;
 		if (list == null || list.isEmpty()) {
-			Log.printConcatLine(name, ".addFile(): Warning - list is empty.");
+			getLogger().warn("no file to add");
 			return result;
 		}
 
@@ -499,7 +508,6 @@ public class HarddriveStorage implements Storage {
 	public boolean contains(String fileName) {
 		boolean result = false;
 		if (fileName == null || fileName.length() == 0) {
-			Log.printConcatLine(name, ".contains(): Warning - invalid file name");
 			return result;
 		}
 		// check each file in the list
@@ -558,4 +566,12 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
+	public EntityPrefixedLogger getLogger() {
+		return this.logger;
+	}
+
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 }

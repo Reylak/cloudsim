@@ -8,19 +8,16 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-import java.util.Map;
-
-import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
+
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * PowerDatacenter is a class that enables simulation of power-aware data centers.
@@ -99,20 +96,10 @@ public class PowerDatacenter extends Datacenter {
 						PowerHost targetHost = (PowerHost) migrate.get("host");
 						PowerHost oldHost = (PowerHost) vm.getHost();
 
-						if (oldHost == null) {
-							Log.formatLine(
-									"%.2f: Migration of VM #%d to Host #%d is started",
-									currentTime,
-									vm.getId(),
-									targetHost.getId());
-						} else {
-							Log.formatLine(
-									"%.2f: Migration of VM #%d from Host #%d to Host #%d is started",
-									currentTime,
-									vm.getId(),
-									oldHost.getId(),
-									targetHost.getId());
-						}
+						if (oldHost == null)
+							getLogger().info("started migrating VM {} to host {}", vm, targetHost);
+						else
+							getLogger().info("started migrating VM {} from host {} to host {}", vm, oldHost, targetHost);
 
 						targetHost.addMigratingInVm(vm);
 						incrementMigrationCount();
@@ -170,42 +157,38 @@ public class PowerDatacenter extends Datacenter {
 		double timeDiff = currentTime - getLastProcessTime();
 		double timeFrameDatacenterEnergy = 0.0;
 
-		Log.printLine("\n\n--------------------------------------------------------------\n\n");
-		Log.formatLine("New resource usage for the time frame starting at %.2f:", currentTime);
-
 		for (PowerHost host : this.<PowerHost> getHostList()) {
-			Log.printLine();
-
 			double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
 			if (time < minTime) {
 				minTime = time;
 			}
+		}
 
-			Log.formatLine(
-					"%.2f: [Host #%d] utilization is %.2f%%",
-					currentTime,
-					host.getId(),
-					host.getUtilizationOfCpu() * 100);
+		if (getLogger().isInfoEnabled()) {
+			String hostCpuUsage = this.<PowerHost>getHostList().stream()
+					.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
+					.collect(Collectors.joining(", "));
+			getLogger().info("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
 		}
 
 		if (timeDiff > 0) {
-			Log.formatLine(
-					"\nEnergy consumption for the last time frame from %.2f to %.2f:",
-					getLastProcessTime(),
-					currentTime);
+			StringJoiner hostPowerUsageJoiner = new StringJoiner(", ");
 
-			for (PowerHost host : this.<PowerHost> getHostList()) {
+			for (PowerHost host : this.<PowerHost>getHostList()) {
 				double timeFrameHostEnergy = host.getEnergyConsumption(this.getLastProcessTime(), currentTime - 1);
 				timeFrameDatacenterEnergy += timeFrameHostEnergy;
 
-				Log.formatLine("[INFO] Host %d: %.2fWs", host.getId(), timeFrameHostEnergy);
+				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", timeFrameHostEnergy));
 			}
 
-			Log.formatLine(
-					"\n%.2f: Data center's energy is %.2f W*sec\n",
-					currentTime,
-					timeFrameDatacenterEnergy);
+			getLogger().info("hosts power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					hostPowerUsageJoiner);
 		}
+
+		getLogger().info("total power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					timeFrameDatacenterEnergy);
 
 		setPower(getPower() + timeFrameDatacenterEnergy);
 
@@ -216,11 +199,9 @@ public class PowerDatacenter extends Datacenter {
 			for (Vm vm : host.getCompletedVms()) {
 				getVmAllocationPolicy().deallocateHostForVm(vm);
 				getVmList().remove(vm);
-				Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
+				getLogger().info("removed completed VM {} from host {}", vm, host);
 			}
 		}
-
-		Log.printLine();
 
 		setLastProcessTime(currentTime);
 		return minTime;

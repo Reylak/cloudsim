@@ -422,4 +422,8 @@ public class File {
 		return transactionTime;
 	}
 
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 }

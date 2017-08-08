@@ -8,16 +8,13 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-
 import org.cloudbus.cloudsim.Vm;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 /**
  * @author		Anton Beloglazov

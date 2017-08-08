@@ -8,12 +8,12 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A VM selection policy that selects for migration the VM with the Maximum Correlation Coefficient (MCC) among 

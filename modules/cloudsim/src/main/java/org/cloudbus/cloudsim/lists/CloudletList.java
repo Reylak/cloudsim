@@ -8,11 +8,11 @@
 
 package org.cloudbus.cloudsim.lists;
 
+import org.cloudbus.cloudsim.Cloudlet;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.cloudbus.cloudsim.Cloudlet;
 
 /**
  * CloudletList is a collection of operations on lists of Cloudlets.

@@ -8,17 +8,13 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+
+import java.util.*;
 
 /**
  * CloudletSchedulerSpaceShared implements a policy of scheduling performed by a virtual machine

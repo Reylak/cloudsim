@@ -8,11 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * VmSchedulerSpaceShared is a VMM allocation policy that allocates one or more PEs from a host to a 

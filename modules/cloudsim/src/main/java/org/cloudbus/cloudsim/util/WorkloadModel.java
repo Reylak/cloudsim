@@ -8,9 +8,9 @@
 
 package org.cloudbus.cloudsim.util;
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.Cloudlet;
+
+import java.util.List;
 
 /**
  * Defines what a workload model should provide. A workload model generates a list of

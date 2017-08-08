@@ -8,12 +8,11 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
+
+import java.util.List;
 
 /**
  * A VM allocation policy that uses Inter Quartile Range (IQR)  to compute
@@ -137,8 +136,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 */
 	protected void setSafetyParameter(double safetyParameter) {
 		if (safetyParameter < 0) {
-			Log.printConcatLine("The safety parameter cannot be less than zero. The passed value is: ",
-					safetyParameter);
+			getLogger().error("bad value \"{}\" for safety parameter", safetyParameter);
 			System.exit(0);
 		}
 		this.safetyParameter = safetyParameter;

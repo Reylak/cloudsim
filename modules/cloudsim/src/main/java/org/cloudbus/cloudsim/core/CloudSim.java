@@ -8,19 +8,14 @@
 
 package org.cloudbus.cloudsim.core;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
 import org.cloudbus.cloudsim.core.predicates.PredicateAny;
 import org.cloudbus.cloudsim.core.predicates.PredicateNone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
+import java.util.*;
 
 /**
  * This class extends the CloudSimCore to enable network simulation in CloudSim. Also, it disables
@@ -64,6 +59,8 @@ public class CloudSim {
 
 	/** The minimal time between events. Events within shorter periods after the last event are discarded. */
 	private static double minTimeBetweenEvents = 0.1;
+
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 * Initialises all the common attributes.
@@ -125,12 +122,8 @@ public class CloudSim {
 
 			// set all the above entity IDs
 			cisId = cis.getId();
-		} catch (IllegalArgumentException s) {
-			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
-			Log.printLine(s.getMessage());
 		} catch (Exception e) {
-			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
-			Log.printLine(e.getMessage());
+			getLogger().error("failed initializing simulation", e);
 		}
 	}
 
@@ -183,7 +176,8 @@ public class CloudSim {
 	 * @post $none
 	 */
 	public static double startSimulation() throws NullPointerException {
-		Log.printConcatLine("Starting CloudSim version ", CLOUDSIM_VERSION_STRING);
+		getLogger().info("starting CloudSim v{}", CLOUDSIM_VERSION_STRING);
+
 		try {
 			double clock = run();
 
@@ -229,8 +223,10 @@ public class CloudSim {
 	 * @return true, if successful; false otherwise.
 	 */
 	public static boolean terminateSimulation() {
+		getLogger().info("reached simulation termination time.");
+
 		running = false;
-		printMessage("Simulation: Reached termination time.");
+
 		return true;
 	}
 
@@ -345,7 +341,8 @@ public class CloudSim {
 	 * start of the simulation.
 	 */
 	protected static void initialize() {
-		Log.printLine("Initialising...");
+		getLogger().info("initializing simulation");
+
 		entities = new ArrayList<SimEntity>();
 		entitiesByName = new LinkedHashMap<String, SimEntity>();
 		future = new FutureQueue();
@@ -497,7 +494,7 @@ public class CloudSim {
 		if (e == null) {
 			throw new IllegalArgumentException("Adding null entity.");
 		} else {
-			printMessage("Adding: " + e.getName());
+			getLogger().info("adding new entity {}", e);
 		}
 		e.startEntity();
 	}
@@ -553,7 +550,8 @@ public class CloudSim {
 		} else {
 			queue_empty = true;
 			running = false;
-			printMessage("Simulation: No more future events");
+
+			getLogger().info("no more future events");
 		}
 
 		return queue_empty;
@@ -563,7 +561,7 @@ public class CloudSim {
 	 * Internal method used to stop the simulation. This method should <b>not</b> be used directly.
 	 */
 	public static void runStop() {
-		printMessage("Simulation completed.");
+		getLogger().info("completed simulation");
 	}
 
 	/**
@@ -820,7 +818,7 @@ public class CloudSim {
 			ent.startEntity();
 		}
 
-		printMessage("Entities started.");
+		getLogger().info("started all entities");
 	}
 
 	/**
@@ -960,15 +958,6 @@ public class CloudSim {
 	}
 
 	/**
-	 * Prints a message about the progress of the simulation.
-	 * 
-	 * @param message the message
-	 */
-	private static void printMessage(String message) {
-		Log.printLine(message);
-	}
-
-	/**
 	 * Checks if is paused.
 	 * 
 	 * @return true, if is paused
@@ -977,4 +966,7 @@ public class CloudSim {
 		return paused;
 	}
 
+	public static Logger getLogger() {
+		return logger;
+	}
 }

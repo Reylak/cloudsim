@@ -3,14 +3,14 @@
  */
 package org.cloudbus.cloudsim.examples.power.random;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelNull;
 import org.cloudbus.cloudsim.UtilizationModelStochastic;
 import org.cloudbus.cloudsim.examples.power.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Helper class for the random workload.

@@ -9,24 +9,19 @@ package org.cloudbus.cloudsim;
  * Copyright (c) 2009, The University of Melbourne, Australia
  */
 
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 /**
  * A simple example showing how to create a datacenter with one host and run one
@@ -40,6 +35,8 @@ public class TimeSharedProblemDetector {
 	/** The vmlist. */
 	private static List<Vm> vmlist;
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * Creates main() to run this example.
 	 *
@@ -47,7 +44,7 @@ public class TimeSharedProblemDetector {
 	 */
 	public static void main(String[] args) {
 
-		Log.printLine("Starting CloudSimExample1...");
+		logger.info("Starting CloudSim example \"Time-shared problem detector\"");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -136,10 +133,9 @@ public class TimeSharedProblemDetector {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample1 finished!");
+			logger.info("Done!");
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			logger.error("example failed", e);
 		}
 	}
 
@@ -244,21 +240,20 @@ public class TimeSharedProblemDetector {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+		System.out.println("========== OUTPUT ==========");
+		System.out.println("Cloudlet ID" + indent + "STATUS" + indent
 				+ "Data center ID" + indent + "VM ID" + indent + "Time" + indent
 				+ "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
 			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+			System.out.print(indent + cloudlet.getCloudletId() + indent + indent);
 
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
-				Log.print("SUCCESS");
+				System.out.print("SUCCESS");
 
-				Log.printLine(indent + indent + cloudlet.getResourceId()
+				System.out.println(indent + indent + cloudlet.getResourceId()
 						+ indent + indent + indent + cloudlet.getVmId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent

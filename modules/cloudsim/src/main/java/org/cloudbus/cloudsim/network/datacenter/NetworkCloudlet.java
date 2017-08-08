@@ -8,11 +8,11 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * NetworkCloudlet class extends Cloudlet to support simulation of complex applications. Each such

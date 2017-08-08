@@ -8,16 +8,16 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.network.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.cloudbus.cloudsim.network.DelayMatrix_Float;
-import org.cloudbus.cloudsim.network.GraphReaderBrite;
-import org.cloudbus.cloudsim.network.TopologicalGraph;
-import org.cloudbus.cloudsim.network.TopologicalLink;
-import org.cloudbus.cloudsim.network.TopologicalNode;
 
 /**
  * Implements the network layer in CloudSim. It reads a file in the <a href="http://www.cs.bu.edu/brite/user_manual/node29.html">BRITE format</a>,
@@ -69,6 +69,8 @@ public class NetworkTopology {
          */
         protected static Map<Integer, Integer> map = null;
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * Creates the network topology if the file exists and can be successfully parsed. File is
 	 * written in the BRITE format and contains topological information on simulation entities.
@@ -78,8 +80,6 @@ public class NetworkTopology {
 	 * @post $none
 	 */
 	public static void buildNetworkTopology(String fileName) {
-		Log.printConcatLine("Topology file: ", fileName);
-
 		// try to find the file
 		GraphReaderBrite reader = new GraphReaderBrite();
 
@@ -89,8 +89,7 @@ public class NetworkTopology {
 			generateMatrices();
 		} catch (IOException e) {
 			// problem with the file. Does not simulate network
-			Log.printLine("Problem in processing BRITE file. Network simulation is disabled. Error: "
-					+ e.getMessage());
+			getLogger().error("failed processing BRITE file \"{}\"; network simulation is disabled", fileName, e);
 		}
 
 	}
@@ -201,15 +200,16 @@ public class NetworkTopology {
 					if (!map.containsValue(briteID)) { // this BRITE node was already mapped?
 						map.put(cloudSimEntityID, briteID);
 					} else {
-						Log.printConcatLine("Error in network mapping. BRITE node ", briteID, " already in use.");
+						getLogger().error("failed mapping entity {} to BRITE network node {}: node already in use",
+								CloudSim.getEntity(cloudSimEntityID), briteID);
 					}
 				} else {
-					Log.printConcatLine("Error in network mapping. CloudSim entity ", cloudSimEntityID,
-							" already mapped.");
+					getLogger().error("failed mapping entity {} to BRITE network node {}: entity already mapped",
+							CloudSim.getEntity(cloudSimEntityID), briteID);
 				}
 			} catch (Exception e) {
-				Log.printConcatLine("Error in network mapping. CloudSim node ", cloudSimEntityID,
-						" not mapped to BRITE node ", briteID, ".");
+				getLogger().error("failed mapping entity {} to BRITE network node {}",
+						CloudSim.getEntity(cloudSimEntityID), briteID, e);
 			}
 		}
 	}
@@ -226,7 +226,8 @@ public class NetworkTopology {
 			try {
 				map.remove(cloudSimEntityID);
 			} catch (Exception e) {
-				Log.printConcatLine("Error in network unmapping. CloudSim node: ", cloudSimEntityID);
+				getLogger().error("failed unmapping entity {} to its BRITE network node",
+						CloudSim.getEntity(cloudSimEntityID), e);
 			}
 		}
 	}
@@ -268,4 +269,7 @@ public class NetworkTopology {
 		return networkEnabled;
 	}
 
+	public static Logger getLogger() {
+		return logger;
+	}
 }

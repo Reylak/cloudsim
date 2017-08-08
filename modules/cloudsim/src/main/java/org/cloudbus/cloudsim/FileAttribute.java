@@ -8,9 +8,9 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.Date;
-
 import org.cloudbus.cloudsim.core.CloudSim;
+
+import java.util.Date;
 
 /**
  * Stores related information regarding to a {@link gridsim.datagrid.File} entity.

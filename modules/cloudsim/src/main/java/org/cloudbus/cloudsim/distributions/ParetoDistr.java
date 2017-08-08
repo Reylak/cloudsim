@@ -9,9 +9,9 @@ mulation) Toolkit for Modeling and Simulation of Clouds
 
 package org.cloudbus.cloudsim.distributions;
 
-import java.util.Random;
-
 import org.apache.commons.math3.distribution.ParetoDistribution;
+
+import java.util.Random;
 
 /**
  * A pseudo random number generator following the

@@ -8,16 +8,14 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
+import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * NetworkVmAllocationPolicy is an {@link VmAllocationPolicy} that chooses, 
@@ -237,9 +235,6 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 			getUsedPes().put(vm.getUid(), requiredPes);
 			getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
 
-			Log.formatLine(
-					"%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId(),
-					CloudSim.clock());
 			return true;
 		}
 

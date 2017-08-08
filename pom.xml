@@ -7,22 +7,22 @@
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
   <url>http://www.cloudbus.org/cloudsim/</url>
-  
+
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <modules>
   	<module>modules</module>
   	<module>documentation</module>
   	<module>distribution</module>
   </modules>
-  
+
   <organization>
   	<name>The Cloud Computing and Distributed Systems (CLOUDS) Laboratory, The University of Melbourne</name>
   	<url>http://cloudbus.org/</url>
   </organization>
-  
+
   <build>
   	<pluginManagement>
   		<plugins>
@@ -37,16 +37,16 @@
   			</plugin>
   		</plugins>
   	</pluginManagement>
-  </build>  
-  
+  </build>
+
   <distributionManagement>
 	<repository>
 		<id>localrepo</id>
 		<name>LocalRepository</name>
 		<url>file:///${project.build.directory}/deployment-artifacts</url>
 	</repository>
-  </distributionManagement> 
-  
+  </distributionManagement>
+
   <dependencyManagement>
   	<dependencies>
   		<dependency>
@@ -59,11 +59,11 @@
   			<artifactId>cloudsim</artifactId>
   			<version>${project.version}</version>
   		</dependency>
-  		<dependency>
+<!--  		<dependency>
   			<groupId>${project.groupId}</groupId>
   			<artifactId>cloudsim-examples</artifactId>
   			<version>${project.version}</version>
-  		</dependency>
+  		</dependency>-->
   		<dependency>
   			<groupId>${project.groupId}</groupId>
   			<artifactId>documentation</artifactId>
@@ -74,7 +74,7 @@
   			<artifactId>distribution</artifactId>
   			<version>${project.version}</version>
   		</dependency>
-  		
+
   		<dependency>
   			<groupId>junit</groupId>
   			<artifactId>junit</artifactId>
@@ -92,8 +92,15 @@
 			<artifactId>easymockclassextension</artifactId>
 			<version>3.1</version>
 			<scope>test</scope>
-		</dependency>  		  		
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.8.0-alpha2</version>
+		</dependency>
   	</dependencies>
+
   </dependencyManagement>
-    
+
 </project>

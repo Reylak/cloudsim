@@ -12,7 +12,7 @@
   
   <modules>
     <module>cloudsim</module>
-    <module>cloudsim-examples</module>
+    <!--<module>cloudsim-examples</module>-->
   </modules>
 
   <build>

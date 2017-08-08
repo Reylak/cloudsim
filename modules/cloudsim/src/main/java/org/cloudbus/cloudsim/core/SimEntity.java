@@ -8,9 +8,10 @@
 
 package org.cloudbus.cloudsim.core;
 
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.NetworkTopology;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
+import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a simulation entity. An entity handles events and can send events to other
@@ -46,6 +47,9 @@ public abstract class SimEntity implements Cloneable {
 	/** The entity's current state. */
 	private int state;
 
+	/** The logger used by the entity to log its own log messages. */
+	private EntityPrefixedLogger logger;
+
 	/**
 	 * Creates a new entity.
 	 * 
@@ -59,6 +63,8 @@ public abstract class SimEntity implements Cloneable {
 		id = -1;
 		state = RUNNABLE;
 		CloudSim.addEntity(this);
+
+		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "{}: ", this);
 	}
 
 	/**
@@ -552,11 +558,6 @@ public abstract class SimEntity implements Cloneable {
 			throw new IllegalArgumentException("The specified delay is infinite value");
 		}
 
-		if (entityId < 0) {
-			Log.printConcatLine(getName(), ".send(): Error - " + "invalid entity id ", entityId);
-			return;
-		}
-
 		int srcId = getId();
 		if (entityId != srcId) {// only delay messages between different entities
 			delay += getNetworkDelay(srcId, entityId);
@@ -688,4 +689,12 @@ public abstract class SimEntity implements Cloneable {
 		return 0.0;
 	}
 
+	public EntityPrefixedLogger getLogger() {
+		return this.logger;
+	}
+
+	@Override
+	public String toString() {
+		return this.getName() + " (" + String.valueOf(this.getId()) + ")";
+	}
 }

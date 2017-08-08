@@ -9,30 +9,20 @@ package org.cloudbus.cloudsim.examples;
  * Copyright (c) 2009, The University of Melbourne, Australia
  */
 
+import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.VmSchedulerTimeShared;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 /**
  * A simple example showing how to create a data center with one host and run one cloudlet on it.
@@ -43,6 +33,8 @@ public class CloudSimExample1 {
 	/** The vmlist. */
 	private static List<Vm> vmlist;
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * Creates main() to run this example.
 	 *
@@ -50,7 +42,7 @@ public class CloudSimExample1 {
 	 */
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		Log.printLine("Starting CloudSimExample1...");
+		getLogger().info("starting CloudSimExample1");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called before creating any entities.
@@ -141,10 +133,9 @@ public class CloudSimExample1 {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample1 finished!");
+			getLogger().info("CloudSimExample1 terminated");
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			getLogger().error("simulation terminated due to unexpected error", e);
 		}
 	}
 
@@ -249,21 +240,21 @@ public class CloudSimExample1 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+		System.out.println();
+		System.out.println("========== OUTPUT ==========");
+		System.out.println("Cloudlet ID" + indent + "STATUS" + indent
 				+ "Data center ID" + indent + "VM ID" + indent + "Time" + indent
 				+ "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
 			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+			System.out.print(indent + cloudlet.getCloudletId() + indent + indent);
 
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
-				Log.print("SUCCESS");
+				System.out.print("SUCCESS");
 
-				Log.printLine(indent + indent + cloudlet.getResourceId()
+				System.out.println(indent + indent + cloudlet.getResourceId()
 						+ indent + indent + indent + cloudlet.getVmId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent
@@ -272,5 +263,9 @@ public class CloudSimExample1 {
 						+ dft.format(cloudlet.getFinishTime()));
 			}
 		}
+	}
+
+	public static Logger getLogger() {
+		return logger;
 	}
 }

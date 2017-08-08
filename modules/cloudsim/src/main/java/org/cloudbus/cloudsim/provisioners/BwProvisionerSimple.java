@@ -8,10 +8,10 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
+import org.cloudbus.cloudsim.Vm;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.cloudbus.cloudsim.Vm;
 
 /**
  * BwProvisionerSimple is an extension of {@link BwProvisioner} which uses a best-effort policy to

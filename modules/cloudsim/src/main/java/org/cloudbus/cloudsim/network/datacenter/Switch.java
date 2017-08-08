@@ -8,16 +8,6 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -25,6 +15,9 @@ import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.lists.VmList;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Represents a Network Switch.
@@ -160,13 +153,12 @@ public class Switch extends SimEntity {
 
 	@Override
 	public void startEntity() {
-		Log.printConcatLine(getName(), " is starting...");
+		getLogger().info("starting");
 		schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 
 	@Override
 	public void processEvent(SimEvent ev) {
-		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
 		// Resource characteristics request
 			case CloudSimTags.Network_Event_UP:
@@ -375,17 +367,19 @@ public class Switch extends SimEntity {
 
 	}
 
-        /**
-	 * Process non-default received events that aren't processed by
-         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
-         * This method should be overridden by subclasses in other to process
-         * new defined events.
-         *  
-         * @todo the method should be protected to allow sub classes to override it,
-         * once it does nothing here.
-         */
-	private void processOtherEvent(SimEvent ev) {
+	/** Process non default received events that couldn't be processed by {@link #processEvent(SimEvent)}.
+	 *
+	 * Override this method to process custom events.
+	 *
+	 * @param ev event to process
+	 */
+	protected void processOtherEvent(SimEvent ev) {
+		if (ev == null) {
+			getLogger().warn("received null event");
+			return;
+		}
 
+		getLogger().warn("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
 	}
 
 	/**
@@ -508,7 +502,7 @@ public class Switch extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(getName(), " is shutting down...");
+		getLogger().info("shutting down");
 	}
 
 }

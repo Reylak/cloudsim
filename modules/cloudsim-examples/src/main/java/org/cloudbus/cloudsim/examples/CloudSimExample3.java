@@ -9,30 +9,20 @@
 
 package org.cloudbus.cloudsim.examples;
 
+import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.VmSchedulerTimeShared;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 
 /**
@@ -52,12 +42,13 @@ public class CloudSimExample3 {
 	/** The vmlist. */
 	private static List<Vm> vmlist;
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-
-		Log.printLine("Starting CloudSimExample3...");
+		getLogger().info("starting CloudSimExample3");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -146,11 +137,10 @@ public class CloudSimExample3 {
 
         	printCloudletList(newList);
 
-			Log.printLine("CloudSimExample3 finished!");
+			getLogger().info("CloudSimExample3 terminated");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			getLogger().error("simulation terminated due to unexpected error", e);
 		}
 	}
 
@@ -258,24 +248,28 @@ public class CloudSimExample3 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
+		System.out.println();
+		System.out.println("========== OUTPUT ==========");
+		System.out.println("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
 			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+			System.out.print(indent + cloudlet.getCloudletId() + indent + indent);
 
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS){
-				Log.print("SUCCESS");
+				System.out.print("SUCCESS");
 
-				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
+				System.out.println( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
 						indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime())+
 						indent + indent + dft.format(cloudlet.getFinishTime()));
 			}
 		}
 
+	}
+
+	public static Logger getLogger() {
+		return logger;
 	}
 }

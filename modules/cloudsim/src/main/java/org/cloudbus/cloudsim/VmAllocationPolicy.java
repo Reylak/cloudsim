@@ -8,6 +8,9 @@
 
 package org.cloudbus.cloudsim;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public abstract class VmAllocationPolicy {
 	/** The host list. */
 	private List<? extends Host> hostList;
 
+	private Logger logger;
+
 	/**
 	 * Creates a new VmAllocationPolicy object.
 	 * 
@@ -35,6 +40,7 @@ public abstract class VmAllocationPolicy {
 	 */
 	public VmAllocationPolicy(List<? extends Host> list) {
 		setHostList(list);
+		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/**
@@ -122,4 +128,7 @@ public abstract class VmAllocationPolicy {
 		return (List<T>) hostList;
 	}
 
+	public Logger getLogger() {
+		return this.logger;
+	}
 }

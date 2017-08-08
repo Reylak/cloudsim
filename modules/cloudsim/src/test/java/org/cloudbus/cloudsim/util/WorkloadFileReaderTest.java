@@ -1,18 +1,14 @@
 package org.cloudbus.cloudsim.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.cloudbus.cloudsim.Cloudlet;
+import org.junit.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WorkloadFileReaderTest {
 

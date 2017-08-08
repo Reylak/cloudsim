@@ -8,17 +8,18 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-import java.util.Map;
-
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
+
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * PowerDatacenterNonPowerAware is a class that represents a <b>non-power</b> aware data center in the
@@ -73,45 +74,38 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			double timeDiff = currentTime - getLastProcessTime();
 			double minTime = Double.MAX_VALUE;
 
-			Log.printLine("\n");
-
 			for (PowerHost host : this.<PowerHost> getHostList()) {
-				Log.formatLine("%.2f: Host #%d", CloudSim.clock(), host.getId());
-
-				double hostPower = 0.0;
-
-				try {
-					hostPower = host.getMaxPower() * timeDiff;
-					timeframePower += hostPower;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				Log.formatLine(
-						"%.2f: Host #%d utilization is %.2f%%",
-						CloudSim.clock(),
-						host.getId(),
-						host.getUtilizationOfCpu() * 100);
-				Log.formatLine(
-						"%.2f: Host #%d energy is %.2f W*sec",
-						CloudSim.clock(),
-						host.getId(),
-						hostPower);
-			}
-
-			Log.formatLine("\n%.2f: Consumed energy is %.2f W*sec\n", CloudSim.clock(), timeframePower);
-
-			Log.printLine("\n\n--------------------------------------------------------------\n\n");
-
-			for (PowerHost host : this.<PowerHost> getHostList()) {
-				Log.formatLine("\n%.2f: Host #%d", CloudSim.clock(), host.getId());
-
-				double time = host.updateVmsProcessing(currentTime); // inform VMs to update
-																		// processing
+				double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
 				if (time < minTime) {
 					minTime = time;
 				}
 			}
+
+			if (getLogger().isInfoEnabled()) {
+				String hostCpuUsage = this.<PowerHost>getHostList().stream()
+						.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
+						.collect(Collectors.joining(", "));
+				getLogger().info("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
+			}
+
+			StringJoiner hostPowerUsageJoiner = new StringJoiner(", ");
+
+			for (PowerHost host : this.<PowerHost> getHostList()) {
+				double hostPower = 0.0;
+
+				hostPower = host.getMaxPower() * timeDiff;
+				timeframePower += hostPower;
+
+				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", hostPower));
+			}
+
+			getLogger().info("hosts power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					hostPowerUsageJoiner);
+
+			getLogger().info("total power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					timeframePower);
 
 			setPower(getPower() + timeframePower);
 
@@ -122,11 +116,9 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 				for (Vm vm : host.getCompletedVms()) {
 					getVmAllocationPolicy().deallocateHostForVm(vm);
 					getVmList().remove(vm);
-					Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
+					getLogger().info("removed completed VM {} from host {}", vm, host);
 				}
 			}
-
-			Log.printLine();
 
 			if (!isDisableMigrations()) {
 				List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
@@ -138,20 +130,10 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 						PowerHost targetHost = (PowerHost) migrate.get("host");
 						PowerHost oldHost = (PowerHost) vm.getHost();
 
-						if (oldHost == null) {
-							Log.formatLine(
-									"%.2f: Migration of VM #%d to Host #%d is started",
-									CloudSim.clock(),
-									vm.getId(),
-									targetHost.getId());
-						} else {
-							Log.formatLine(
-									"%.2f: Migration of VM #%d from Host #%d to Host #%d is started",
-									CloudSim.clock(),
-									vm.getId(),
-									oldHost.getId(),
-									targetHost.getId());
-						}
+						if (oldHost == null)
+							getLogger().info("started migrating VM {} to host {}", vm, targetHost);
+						else
+							getLogger().info("started migrating VM {} from host {} to host {}", vm, oldHost, targetHost);
 
 						targetHost.addMigratingInVm(vm);
 						incrementMigrationCount();

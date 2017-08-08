@@ -1,11 +1,10 @@
 package org.cloudbus.cloudsim.examples.power.random;
 
-import java.util.Calendar;
-
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.examples.power.RunnerAbstract;
+
+import java.util.Calendar;
 
 /**
  * The example runner for the random workload.
@@ -70,8 +69,7 @@ public class RandomRunner extends RunnerAbstract {
 			vmList = Helper.createVmList(brokerId, cloudletList.size());
 			hostList = Helper.createHostList(RandomConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			getLogger().error("simulation terminated due to unexpected error", e);
 			System.exit(0);
 		}
 	}

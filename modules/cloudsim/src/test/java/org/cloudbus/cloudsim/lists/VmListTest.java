@@ -8,15 +8,15 @@
 
 package org.cloudbus.cloudsim.lists;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import org.cloudbus.cloudsim.Vm;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Vm;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  * @author		Anton Beloglazov

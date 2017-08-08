@@ -8,9 +8,9 @@
 
 package org.cloudbus.cloudsim.lists;
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.Vm;
+
+import java.util.List;
 
 /**
  * VmList is a collection of operations on lists of VMs.

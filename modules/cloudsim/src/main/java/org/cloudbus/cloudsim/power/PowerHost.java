@@ -8,14 +8,14 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.power.models.PowerModel;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
+
+import java.util.List;
 
 /**
  * PowerHost class enables simulation of power-aware hosts.

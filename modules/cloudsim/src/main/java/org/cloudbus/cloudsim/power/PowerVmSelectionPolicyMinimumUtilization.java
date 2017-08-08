@@ -8,10 +8,10 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+
+import java.util.List;
 
 /**
  * A VM selection policy that selects for migration the VM with Minimum Utilization (MU)

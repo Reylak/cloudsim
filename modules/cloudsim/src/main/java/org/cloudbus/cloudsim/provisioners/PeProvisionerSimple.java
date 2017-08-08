@@ -8,12 +8,12 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
+import org.cloudbus.cloudsim.Vm;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.cloudbus.cloudsim.Vm;
 
 /**
  * PeProvisionerSimple is an extension of {@link PeProvisioner} which uses a best-effort policy to

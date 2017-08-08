@@ -1,13 +1,11 @@
 package org.cloudbus.cloudsim.power;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class PowerVmSelectionPolicyMaximumCorrelationTest {
 

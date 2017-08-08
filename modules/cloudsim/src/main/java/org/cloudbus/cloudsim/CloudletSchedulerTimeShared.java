@@ -7,10 +7,10 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * CloudletSchedulerTimeShared implements a policy of scheduling performed by a virtual machine

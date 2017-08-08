@@ -18,7 +18,6 @@ import org.cloudbus.cloudsim.power.models.PowerModelSpecPowerHpProLiantMl110G5Xe
  */
 public class Constants {
 
-	public final static boolean ENABLE_OUTPUT = true;
 	public final static boolean OUTPUT_CSV    = false;
 
 	public final static double SCHEDULING_INTERVAL = 300;

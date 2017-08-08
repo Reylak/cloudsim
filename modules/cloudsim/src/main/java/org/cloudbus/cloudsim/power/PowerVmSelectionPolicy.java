@@ -8,10 +8,10 @@
 
 package org.cloudbus.cloudsim.power;
 
+import org.cloudbus.cloudsim.Vm;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.cloudbus.cloudsim.Vm;
 
 /**
  * An abstract VM selection policy used to select VMs from a list of migratable VMs.

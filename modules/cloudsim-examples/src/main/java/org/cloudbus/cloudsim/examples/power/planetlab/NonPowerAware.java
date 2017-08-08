@@ -1,12 +1,7 @@
 package org.cloudbus.cloudsim.examples.power.planetlab;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.List;
-
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.examples.power.Constants;
@@ -14,6 +9,13 @@ import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.power.PowerDatacenterNonPowerAware;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
@@ -36,6 +38,8 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
  */
 public class NonPowerAware {
 
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	/**
 	 * The main method.
 	 * 
@@ -48,8 +52,7 @@ public class NonPowerAware {
 		String inputFolder = NonPowerAware.class.getClassLoader().getResource("workload/planetlab/20110303")
 				.getPath();
 
-		Log.setDisabled(!Constants.ENABLE_OUTPUT);
-		Log.printLine("Starting " + experimentName);
+		getLogger().info("starting {}", experimentName);
 
 		try {
 			CloudSim.init(1, Calendar.getInstance(), false);
@@ -75,8 +78,7 @@ public class NonPowerAware {
 			CloudSim.terminateSimulation(Constants.SIMULATION_LIMIT);
 			double lastClock = CloudSim.startSimulation();
 
-			List<Cloudlet> newList = broker.getCloudletReceivedList();
-			Log.printLine("Received " + newList.size() + " cloudlets");
+			getLogger().info("received {} cloudlets", cloudletList.size());
 
 			CloudSim.stopSimulation();
 
@@ -89,12 +91,14 @@ public class NonPowerAware {
 					outputFolder);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			getLogger().error("simulation terminated due to unexpected error", e);
 			System.exit(0);
 		}
 
-		Log.printLine("Finished " + experimentName);
+		getLogger().info("terminated experiment {}", experimentName);
 	}
 
+	public static Logger getLogger() {
+		return logger;
+	}
 }

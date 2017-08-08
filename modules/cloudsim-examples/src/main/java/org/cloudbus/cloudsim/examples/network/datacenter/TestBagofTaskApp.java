@@ -16,8 +16,6 @@ package org.cloudbus.cloudsim.examples.network.datacenter;
  * @since CloudSim Toolkit 1.0
  */
 
-import java.util.List;
-
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -25,6 +23,8 @@ import org.cloudbus.cloudsim.network.datacenter.AppCloudlet;
 import org.cloudbus.cloudsim.network.datacenter.NetworkCloudlet;
 import org.cloudbus.cloudsim.network.datacenter.NetworkConstants;
 import org.cloudbus.cloudsim.network.datacenter.TaskStage;
+
+import java.util.List;
 
 public class TestBagofTaskApp extends AppCloudlet {
 

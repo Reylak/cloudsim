@@ -1,31 +1,18 @@
 package org.cloudbus.cloudsim.examples.power;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.power.PowerDatacenter;
-import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationInterQuartileRange;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegression;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressionRobust;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThreshold;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicy;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
+import org.cloudbus.cloudsim.power.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The Class RunnerAbstract.
@@ -56,6 +43,8 @@ public abstract class RunnerAbstract {
 
 	/** The host list. */
 	protected static List<PowerHost> hostList;
+
+	private Logger logger;
 
 	/**
 	 * Run.
@@ -93,6 +82,9 @@ public abstract class RunnerAbstract {
 		}
 
 		init(inputFolder + "/" + workload);
+
+		this.logger = LoggerFactory.getLogger(this.getClass());
+
 		start(
 				getExperimentName(workload, vmAllocationPolicy, vmSelectionPolicy, parameter),
 				outputFolder,
@@ -121,7 +113,6 @@ public abstract class RunnerAbstract {
 			String vmSelectionPolicy,
 			String parameter) throws IOException, FileNotFoundException {
 		setEnableOutput(enableOutput);
-		Log.setDisabled(!isEnableOutput());
 		if (isEnableOutput() && outputToFile) {
 			File folder = new File(outputFolder);
 			if (!folder.exists()) {
@@ -136,7 +127,6 @@ public abstract class RunnerAbstract {
 			File file = new File(outputFolder + "/log/"
 					+ getExperimentName(workload, vmAllocationPolicy, vmSelectionPolicy, parameter) + ".txt");
 			file.createNewFile();
-			Log.setOutput(new FileOutputStream(file));
 		}
 	}
 
@@ -172,8 +162,7 @@ public abstract class RunnerAbstract {
 			CloudSim.terminateSimulation(Constants.SIMULATION_LIMIT);
 			double lastClock = CloudSim.startSimulation();
 
-			List<Cloudlet> newList = broker.getCloudletReceivedList();
-			Log.printLine("Received " + newList.size() + " cloudlets");
+			getLogger().info("received {} cloudlets", cloudletList.size());
 
 			CloudSim.stopSimulation();
 
@@ -186,12 +175,11 @@ public abstract class RunnerAbstract {
 					outputFolder);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			getLogger().error("simulation terminated due to unexpected error", e);
 			System.exit(0);
 		}
 
-		Log.printLine("Finished " + experimentName);
+		getLogger().info("terminated experiment {}", experimentName);
 	}
 
 	/**
@@ -333,4 +321,7 @@ public abstract class RunnerAbstract {
 		return enableOutput;
 	}
 
+	public Logger getLogger() {
+		return logger;
+	}
 }

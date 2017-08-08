@@ -7,13 +7,15 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
+import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Host is a Physical Machine (PM) inside a Datacenter. It is also called as a Server.
@@ -58,6 +60,9 @@ public class Host {
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
 
+	/** The logger used by the entity to log its own log messages. */
+	private EntityPrefixedLogger logger;
+
 	/**
 	 * Instantiates a new host.
 	 * 
@@ -83,6 +88,8 @@ public class Host {
 
 		setPeList(peList);
 		setFailed(false);
+
+		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "host {}: ", this);
 	}
 
 	/**
@@ -124,27 +131,23 @@ public class Host {
 
 		if (!getVmsMigratingIn().contains(vm)) {
 			if (getStorage() < vm.getSize()) {
-				Log.printConcatLine("[VmScheduler.addMigratingInVm] Allocation of VM #", vm.getId(), " to Host #",
-						getId(), " failed by storage");
+				getLogger().error("failed allocating VM {} to host {}: storage error", vm, this);
 				System.exit(0);
 			}
 
 			if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
-				Log.printConcatLine("[VmScheduler.addMigratingInVm] Allocation of VM #", vm.getId(), " to Host #",
-						getId(), " failed by RAM");
+				getLogger().error("failed allocating VM {} to host {}: RAM error", vm, this);
 				System.exit(0);
 			}
 
 			if (!getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw())) {
-				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #"
-						+ getId() + " failed by BW");
+				getLogger().error("failed allocating VM {} to host {}: bandwidth error", vm, this);
 				System.exit(0);
 			}
 
 			getVmScheduler().getVmsMigratingIn().add(vm.getUid());
 			if (!getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips())) {
-				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #"
-						+ getId() + " failed by MIPS");
+				getLogger().error("failed allocating VM {} to host {}: MIps error", vm, this);
 				System.exit(0);
 			}
 
@@ -213,27 +216,23 @@ public class Host {
 	 */
 	public boolean vmCreate(Vm vm) {
 		if (getStorage() < vm.getSize()) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", vm.getId(), " to Host #", getId(),
-					" failed by storage");
+			getLogger().error("failed allocating VM {} to host {}: storage error", vm, this);
 			return false;
 		}
 
 		if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", vm.getId(), " to Host #", getId(),
-					" failed by RAM");
+			getLogger().error("failed allocating VM {} to host {}: RAM error", vm, this);
 			return false;
 		}
 
 		if (!getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", vm.getId(), " to Host #", getId(),
-					" failed by BW");
+			getLogger().error("failed allocating VM {} to host {}: bandwidth error", vm, this);
 			getRamProvisioner().deallocateRamForVm(vm);
 			return false;
 		}
 
 		if (!getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", vm.getId(), " to Host #", getId(),
-					" failed by MIPS");
+			getLogger().error("failed allocating VM {} to host {}: MIps error", vm, this);
 			getRamProvisioner().deallocateRamForVm(vm);
 			getBwProvisioner().deallocateBwForVm(vm);
 			return false;
@@ -613,4 +612,12 @@ public class Host {
 		this.datacenter = datacenter;
 	}
 
+	public EntityPrefixedLogger getLogger() {
+		return this.logger;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(this.getId());
+	}
 }

@@ -1,42 +1,18 @@
 package org.cloudbus.cloudsim.examples.power;
 
+import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.power.*;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.cloudbus.cloudsim.util.MathUtil;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
-import org.cloudbus.cloudsim.Datacenter;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.HostDynamicWorkload;
-import org.cloudbus.cloudsim.HostStateHistoryEntry;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription;
-import org.cloudbus.cloudsim.VmStateHistoryEntry;
-import org.cloudbus.cloudsim.power.PowerDatacenter;
-import org.cloudbus.cloudsim.power.PowerDatacenterBroker;
-import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
-import org.cloudbus.cloudsim.power.PowerVm;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
-import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.cloudbus.cloudsim.util.MathUtil;
+import java.util.*;
 
 /**
  * The Class Helper.
@@ -249,7 +225,6 @@ public class Helper {
 			String experimentName,
 			boolean outputInCsv,
 			String outputFolder) {
-		Log.enable();
 		List<Host> hosts = datacenter.getHostList();
 
 		int numberOfHosts = hosts.size();
@@ -380,37 +355,31 @@ public class Helper {
 					+ experimentName + "_time_before_vm_migration.csv");
 
 		} else {
-			Log.setDisabled(false);
-			Log.printLine();
-			Log.printLine(String.format("Experiment name: " + experimentName));
-			Log.printLine(String.format("Number of hosts: " + numberOfHosts));
-			Log.printLine(String.format("Number of VMs: " + numberOfVms));
-			Log.printLine(String.format("Total simulation time: %.2f sec", totalSimulationTime));
-			Log.printLine(String.format("Energy consumption: %.2f kWh", energy));
-			Log.printLine(String.format("Number of VM migrations: %d", numberOfMigrations));
-			Log.printLine(String.format("SLA: %.5f%%", sla * 100));
-			Log.printLine(String.format(
+			System.out.println();
+			System.out.println(String.format("Experiment name: " + experimentName));
+			System.out.println(String.format("Number of hosts: " + numberOfHosts));
+			System.out.println(String.format("Number of VMs: " + numberOfVms));
+			System.out.println(String.format("Total simulation time: %.2f sec", totalSimulationTime));
+			System.out.println(String.format("Energy consumption: %.2f kWh", energy));
+			System.out.println(String.format("Number of VM migrations: %d", numberOfMigrations));
+			System.out.println(String.format("SLA: %.5f%%", sla * 100));
+			System.out.println(String.format(
 					"SLA perf degradation due to migration: %.2f%%",
 					slaDegradationDueToMigration * 100));
-			Log.printLine(String.format("SLA time per active host: %.2f%%", slaTimePerActiveHost * 100));
-			Log.printLine(String.format("Overall SLA violation: %.2f%%", slaOverall * 100));
-			Log.printLine(String.format("Average SLA violation: %.2f%%", slaAverage * 100));
-			// Log.printLine(String.format("SLA time per VM with migration: %.2f%%",
-			// slaTimePerVmWithMigration * 100));
-			// Log.printLine(String.format("SLA time per VM without migration: %.2f%%",
-			// slaTimePerVmWithoutMigration * 100));
-			// Log.printLine(String.format("SLA time per host: %.2f%%", slaTimePerHost * 100));
-			Log.printLine(String.format("Number of host shutdowns: %d", numberOfHostShutdowns));
-			Log.printLine(String.format(
+			System.out.println(String.format("SLA time per active host: %.2f%%", slaTimePerActiveHost * 100));
+			System.out.println(String.format("Overall SLA violation: %.2f%%", slaOverall * 100));
+			System.out.println(String.format("Average SLA violation: %.2f%%", slaAverage * 100));
+			System.out.println(String.format("Number of host shutdowns: %d", numberOfHostShutdowns));
+			System.out.println(String.format(
 					"Mean time before a host shutdown: %.2f sec",
 					meanTimeBeforeHostShutdown));
-			Log.printLine(String.format(
+			System.out.println(String.format(
 					"StDev time before a host shutdown: %.2f sec",
 					stDevTimeBeforeHostShutdown));
-			Log.printLine(String.format(
+			System.out.println(String.format(
 					"Mean time before a VM migration: %.2f sec",
 					meanTimeBeforeVmMigration));
-			Log.printLine(String.format(
+			System.out.println(String.format(
 					"StDev time before a VM migration: %.2f sec",
 					stDevTimeBeforeVmMigration));
 
@@ -435,32 +404,30 @@ public class Helper {
 				double executionTimeTotalStDev = MathUtil.stDev(vmAllocationPolicy
 						.getExecutionTimeHistoryTotal());
 
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - VM selection mean: %.5f sec",
 						executionTimeVmSelectionMean));
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - VM selection stDev: %.5f sec",
 						executionTimeVmSelectionStDev));
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - host selection mean: %.5f sec",
 						executionTimeHostSelectionMean));
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - host selection stDev: %.5f sec",
 						executionTimeHostSelectionStDev));
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - VM reallocation mean: %.5f sec",
 						executionTimeVmReallocationMean));
-				Log.printLine(String.format(
+				System.out.println(String.format(
 						"Execution time - VM reallocation stDev: %.5f sec",
 						executionTimeVmReallocationStDev));
-				Log.printLine(String.format("Execution time - total mean: %.5f sec", executionTimeTotalMean));
-				Log.printLine(String
+				System.out.println(String.format("Execution time - total mean: %.5f sec", executionTimeTotalMean));
+				System.out.println(String
 						.format("Execution time - total stDev: %.5f sec", executionTimeTotalStDev));
 			}
-			Log.printLine();
+			System.out.println();
 		}
-
-		Log.setDisabled(true);
 	}
 
 	/**
@@ -723,18 +690,18 @@ public class Helper {
 		Cloudlet cloudlet;
 
 		String indent = "\t";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent + "Resource ID" + indent + "VM ID" + indent
+		System.out.println();
+		System.out.println("========== OUTPUT ==========");
+		System.out.println("Cloudlet ID" + indent + "STATUS" + indent + "Resource ID" + indent + "VM ID" + indent
 				+ "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
 			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId());
+			System.out.print(indent + cloudlet.getCloudletId());
 
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
-				Log.printLine(indent + "SUCCESS" + indent + indent + cloudlet.getResourceId() + indent
+				System.out.println(indent + "SUCCESS" + indent + indent + cloudlet.getResourceId() + indent
 						+ cloudlet.getVmId() + indent + dft.format(cloudlet.getActualCPUTime()) + indent
 						+ dft.format(cloudlet.getExecStartTime()) + indent + indent
 						+ dft.format(cloudlet.getFinishTime()));
@@ -754,25 +721,25 @@ public class Helper {
 		for (int i = 0; i < 10; i++) {
 			Host host = hosts.get(i);
 
-			Log.printLine("Host #" + host.getId());
-			Log.printLine("Time:");
+			System.out.println("Host #" + host.getId());
+			System.out.println("Time:");
 			if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
 				continue;
 			}
 			for (Double time : vmAllocationPolicy.getTimeHistory().get(host.getId())) {
-				Log.format("%.2f, ", time);
+				System.out.format("%.2f, ", time);
 			}
-			Log.printLine();
+			System.out.println();
 
 			for (Double utilization : vmAllocationPolicy.getUtilizationHistory().get(host.getId())) {
-				Log.format("%.2f, ", utilization);
+				System.out.format("%.2f, ", utilization);
 			}
-			Log.printLine();
+			System.out.println();
 
 			for (Double metric : vmAllocationPolicy.getMetricHistory().get(host.getId())) {
-				Log.format("%.2f, ", metric);
+				System.out.format("%.2f, ", metric);
 			}
-			Log.printLine();
+			System.out.println();
 		}
 	}
 

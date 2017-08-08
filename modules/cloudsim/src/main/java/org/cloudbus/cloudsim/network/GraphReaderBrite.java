@@ -65,7 +65,6 @@ public class GraphReaderBrite implements GraphReaderIF {
 			// state that should just find the start of node-declaration
 			if (state == PARSE_NOTHING) {
 				if (nextLine.contains("Nodes:")) {
-					// Log.printLine("found start of Nodes... switch to parse nodes!");
 					state = PARSE_NODES;
 				}
 			}
@@ -85,9 +84,6 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 		br.close();
 
-		// Log.printLine("read file successfully...");
-		// Log.printLine(sb.toString());
-
 		return graph;
 	}
 
@@ -104,7 +100,6 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 		// first test to step to the next parsing-state (edges)
 		if (nodeLine.contains("Edges:")) {
-			// Log.printLine("found start of Edges... switch to parse edges!");
 			state = PARSE_EDGES;
 
 			return;
@@ -112,7 +107,6 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 		// test against an empty line
 		if (!tokenizer.hasMoreElements()) {
-			// Log.printLine("this line contains no tokens...");
 			return;
 		}
 
@@ -127,17 +121,16 @@ public class GraphReaderBrite implements GraphReaderIF {
 		for (int actualParam = 0; tokenizer.hasMoreElements() && actualParam < parameters; actualParam++) {
 			String token = tokenizer.nextToken();
 			switch (actualParam) {
-				case 0:	// Log.printLine("nodeID: "+token);
-						// Log.printLine("nodeLabel: "+token);
+				case 0:
 					nodeID = Integer.valueOf(token);
 					nodeLabel = Integer.toString(nodeID);
 					break;
 
-				case 1:	// Log.printLine("x-Pos: "+token);
+				case 1:
 					xPos = Integer.valueOf(token);
 					break;
 
-				case 2:	// Log.printLine("y-Pos: "+token);
+				case 2:
 					yPos = Integer.valueOf(token);
 					break;
 			}
@@ -162,7 +155,6 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 		// test against an empty line
 		if (!tokenizer.hasMoreElements()) {
-			// Log.printLine("this line contains no tokens...");
 			return;
 		}
 
@@ -179,27 +171,27 @@ public class GraphReaderBrite implements GraphReaderIF {
 		for (int actualParam = 0; tokenizer.hasMoreElements() && actualParam < parameters; actualParam++) {
 			String token = tokenizer.nextToken();
 			switch (actualParam) {
-				case 0:	// Log.printLine("edgeID: "+token);
+				case 0:
 						// edgeID = Integer.valueOf(token);
 					break;
 
-				case 1:	// Log.printLine("fromNode: "+token);
+				case 1:
 					fromNode = Integer.valueOf(token);
 					break;
 
-				case 2:	// Log.printLine("toNode: "+token);
+				case 2:
 					toNode = Integer.valueOf(token);
 					break;
 
-				case 3:	// Log.printLine("euclideanLength: "+token);
+				case 3:
 						// euclideanLength = Float.valueOf(token);
 					break;
 
-				case 4:	// Log.printLine("linkDelay: "+token);
+				case 4:
 					linkDelay = Float.valueOf(token);
 					break;
 
-				case 5:	// Log.printLine("linkBandwith: "+token);
+				case 5:
 					linkBandwith = Float.valueOf(token).intValue();
 					break;
 			}// switch-END

@@ -8,10 +8,10 @@
 
 package org.cloudbus.cloudsim.power;
 
+import org.cloudbus.cloudsim.Vm;
+
 import java.util.List;
 import java.util.Random;
-
-import org.cloudbus.cloudsim.Vm;
 
 /**
  * A VM selection policy that randomly select VMs to migrate from a host.

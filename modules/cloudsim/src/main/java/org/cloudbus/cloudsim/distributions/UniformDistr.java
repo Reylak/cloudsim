@@ -8,9 +8,9 @@
 
 package org.cloudbus.cloudsim.distributions;
 
-import java.util.Random;
-
 import org.apache.commons.math3.distribution.UniformRealDistribution;
+
+import java.util.Random;
 
 /**
  * A pseudo random number generator following the 

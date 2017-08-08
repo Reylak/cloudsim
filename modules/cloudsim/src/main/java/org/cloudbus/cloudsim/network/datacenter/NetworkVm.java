@@ -8,10 +8,10 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import java.util.ArrayList;
-
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Vm;
+
+import java.util.ArrayList;
 
 /**
  * NetworkVm class extends {@link Vm} to support simulation of networked datacenters. 

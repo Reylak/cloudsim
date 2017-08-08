@@ -8,12 +8,11 @@
 
 package org.cloudbus.cloudsim.power.models;
 
-import static org.junit.Assert.assertEquals;
-
-import org.cloudbus.cloudsim.Log;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author		Anton Beloglazov
@@ -57,7 +56,7 @@ public class PowerModelLinearTest {
 	@Ignore
 	public void testPrintPower() {
 		for (int i = 0; i <= 100; i++) {
-			Log.print(String.format("%d;%.2f\n", i, powerModel.getPower((double) i / 100)));
+			System.out.print(String.format("%d;%.2f\n", i, powerModel.getPower((double) i / 100)));
 		}
 	}
 

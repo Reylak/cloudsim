@@ -7,9 +7,11 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.*;
-
 import org.cloudbus.cloudsim.lists.PeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * VmScheduler is an abstract class that represents the policy used by a Virtual Machine Monitor (VMM) 
@@ -57,6 +59,8 @@ public abstract class VmScheduler {
 	/** The VMs migrating out the host (departing). It is the list of VM ids */
 	private List<String> vmsMigratingOut;
 
+	private Logger logger;
+
 	/**
 	 * Creates a new VmScheduler.
 	 * 
@@ -71,6 +75,7 @@ public abstract class VmScheduler {
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		setVmsMigratingIn(new ArrayList<String>());
 		setVmsMigratingOut(new ArrayList<String>());
+		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/**
@@ -155,7 +160,7 @@ public abstract class VmScheduler {
 	 */
 	public double getMaxAvailableMips() {
 		if (getPeList() == null) {
-			Log.printLine("Pe list is empty");
+			getLogger().warn("no PE available");
 			return 0;
 		}
 
@@ -180,7 +185,7 @@ public abstract class VmScheduler {
 	 */
 	public double getPeCapacity() {
 		if (getPeList() == null) {
-			Log.printLine("Pe list is empty");
+			getLogger().warn("no PE available");
 			return 0;
 		}
 		return getPeList().get(0).getMips();
@@ -299,4 +304,7 @@ public abstract class VmScheduler {
 		this.peMap = peMap;
 	}
 
+	public Logger getLogger() {
+		return this.logger;
+	}
 }

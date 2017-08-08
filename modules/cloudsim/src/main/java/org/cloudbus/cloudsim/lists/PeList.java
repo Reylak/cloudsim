@@ -8,11 +8,10 @@
 
 package org.cloudbus.cloudsim.lists;
 
-import java.util.List;
-
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
+
+import java.util.List;
 
 /**
  * PeList is a collection of operations on lists of PEs.
@@ -211,8 +210,6 @@ public class PeList {
 		} else {
 			status = "WORKING";
 		}
-
-		Log.printConcatLine(resName, " - Machine: ", hostId, " is ", status);
 
 		setStatusFailed(peList, failed);
 	}

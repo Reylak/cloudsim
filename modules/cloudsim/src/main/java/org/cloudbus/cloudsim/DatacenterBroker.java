@@ -8,18 +8,14 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
+
+import java.util.*;
 
 /**
  * DatacentreBroker represents a broker acting on behalf of a user. It hides VM management, as vm
@@ -101,6 +97,8 @@ public class DatacenterBroker extends SimEntity {
 		setDatacenterRequestedIdsList(new ArrayList<Integer>());
 		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+
+		getLogger().setPrefix("broker {}: ");
 	}
 
 	/**
@@ -204,9 +202,6 @@ public class DatacenterBroker extends SimEntity {
 		setDatacenterIdsList(CloudSim.getCloudResourceList());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
-				getDatacenterIdsList().size(), " resource(s)");
-
 		for (Integer datacenterId : getDatacenterIdsList()) {
 			sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
 		}
@@ -221,19 +216,20 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void processVmCreate(SimEvent ev) {
 		int[] data = (int[]) ev.getData();
+
 		int datacenterId = data[0];
+		Datacenter datacenter = (Datacenter) CloudSim.getEntity(datacenterId);
 		int vmId = data[1];
+		Vm vm = VmList.getById(this.getVmList(), vmId);
 		int result = data[2];
 
 		if (result == CloudSimTags.TRUE) {
-			getVmsToDatacentersMap().put(vmId, datacenterId);
-			getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #", vmId,
-					" has been created in Datacenter #", datacenterId, ", Host #",
-					VmList.getById(getVmsCreatedList(), vmId).getHost().getId());
+			if (vm == null)
+				getLogger().warn("received ACK for creation of VM with ID {} that is not known; ignoring", vmId);
+			else
+				getLogger().info("created VM {} on host {} of datacenter {}", vm, vm.getHost(), datacenter);
 		} else {
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
-					" failed in Datacenter #", datacenterId);
+			getLogger().error("failed creating VM {} in datacenter {}", vm, datacenter);
 		}
 
 		incrementVmsAcks();
@@ -256,8 +252,8 @@ public class DatacenterBroker extends SimEntity {
 				if (getVmsCreatedList().size() > 0) { // if some vm were created
 					submitCloudlets();
 				} else { // no vms created. abort
-					Log.printLine(CloudSim.clock() + ": " + getName()
-							+ ": none of the required VMs could be created. Aborting");
+					getLogger().error("no VM was created; aborting");
+
 					finishExecution();
 				}
 			}
@@ -268,17 +264,21 @@ public class DatacenterBroker extends SimEntity {
 	 * Process a cloudlet return event.
 	 * 
 	 * @param ev a SimEvent object
+	 *
 	 * @pre ev != $null
 	 * @post $none
 	 */
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
+
+		getLogger().info("processing return of cloudlet {}", cloudlet);
+
 		getCloudletReceivedList().add(cloudlet);
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet ", cloudlet.getCloudletId(),
-				" received");
+
 		cloudletsSubmitted--;
 		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { // all cloudlets executed
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
+			getLogger().info("all cloudlets terminated");
+
 			clearDatacenters();
 			finishExecution();
 		} else { // some cloudlets haven't finished yet
@@ -292,25 +292,19 @@ public class DatacenterBroker extends SimEntity {
 		}
 	}
 
-	/**
-	 * Process non-default received events that aren't processed by
-         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
-         * This method should be overridden by subclasses in other to process
-         * new defined events.
-	 * 
-	 * @param ev a SimEvent object
-	 * @pre ev != null
-	 * @post $none
-         * @todo to ensure the method will be overridden, it should be defined 
-         * as abstract in a super class from where new brokers have to be extended.
+	/** Process non default received events that couldn't be processed by {@link #processEvent(SimEvent)}.
+	 *
+	 * Override this method to process custom events.
+	 *
+	 * @param ev event to process
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine(getName(), ".processOtherEvent(): ", "Error - an event is null.");
+			getLogger().warn("received null event");
 			return;
 		}
 
-		Log.printConcatLine(getName(), ".processOtherEvent(): Error - event unknown by this DatacenterBroker.");
+		getLogger().warn("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
 	}
 
 	/**
@@ -323,12 +317,12 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void createVmsInDatacenter(int datacenterId) {
 		// send as much vms as possible for this datacenter before trying the next one
+		getLogger().info("creating VM in datacenter {}", CloudSim.getEntity(datacenterId));
+
 		int requestedVms = 0;
-		String datacenterName = CloudSim.getEntityName(datacenterId);
+
 		for (Vm vm : getVmList()) {
 			if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
-				Log.printLine(CloudSim.clock() + ": " + getName() + ": Trying to Create VM #" + vm.getId()
-						+ " in " + datacenterName);
 				sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 				requestedVms++;
 			}
@@ -350,6 +344,7 @@ public class DatacenterBroker extends SimEntity {
 	protected void submitCloudlets() {
 		int vmIndex = 0;
 		List<Cloudlet> successfullySubmitted = new ArrayList<Cloudlet>();
+
 		for (Cloudlet cloudlet : getCloudletList()) {
 			Vm vm;
 			// if user didn't bind this cloudlet and it has not been executed yet
@@ -358,18 +353,13 @@ public class DatacenterBroker extends SimEntity {
 			} else { // submit to the specific vm
 				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
-					if(!Log.isDisabled()) {				    
-					    Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
-							cloudlet.getCloudletId(), ": bount VM not available");
-					}
+					getLogger().warn("postponing submission of cloudlet {}: bound VM {} not available",
+							cloudlet, VmList.getById(this.getVmList(), cloudlet.getVmId()));
 					continue;
 				}
 			}
 
-			if (!Log.isDisabled()) {
-			    Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending cloudlet ",
-					cloudlet.getCloudletId(), " to VM #", vm.getId());
-			}
+			getLogger().info("submitting cloudlet {} to VM {}", cloudlet, vm);
 			
 			cloudlet.setVmId(vm.getId());
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
@@ -390,10 +380,10 @@ public class DatacenterBroker extends SimEntity {
 	 * @post $none
 	 */
 	protected void clearDatacenters() {
-		for (Vm vm : getVmsCreatedList()) {
-			Log.printConcatLine(CloudSim.clock(), ": " + getName(), ": Destroying VM #", vm.getId());
+		getLogger().info("clearing datacenters");
+
+		for (Vm vm : getVmsCreatedList())
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
-		}
 
 		getVmsCreatedList().clear();
 	}
@@ -410,12 +400,13 @@ public class DatacenterBroker extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(getName(), " is shutting down...");
+		getLogger().info("shutting down");
 	}
 
 	@Override
 	public void startEntity() {
-		Log.printConcatLine(getName(), " is starting...");
+		getLogger().info("starting");
+
 		schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 

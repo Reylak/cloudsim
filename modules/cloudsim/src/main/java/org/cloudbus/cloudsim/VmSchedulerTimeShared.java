@@ -7,11 +7,10 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
+
+import java.util.*;
 
 /**
  * VmSchedulerTimeShared is a Virtual Machine Monitor (VMM) allocation policy that allocates one or more PEs 
@@ -134,6 +133,10 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			getPeMap().put(vmUid, new HashSet<>());
 
 			for (double mips : entry.getValue()) {
+				if (availableMips == 0 && !peIterator.hasNext()) {
+					getLogger().error("failed allocating PEs to VM {}: not enough MIps", vmUid);
+					break;
+				}
 				while (mips >= 0.1) {
 					if (availableMips >= mips) {
 						peProvisioner.allocateMipsForVm(vmUid, mips);
@@ -147,13 +150,15 @@ public class VmSchedulerTimeShared extends VmScheduler {
 						if (mips <= 0.1) {
 							break;
 						}
-						if (!peIterator.hasNext()) {
-							Log.printConcatLine("There is no enough MIPS (", mips, ") to accommodate VM ", vmUid);
-							// System.exit(0);
+						if (peIterator.hasNext()) {
+							pe = peIterator.next();
+							peProvisioner = pe.getPeProvisioner();
+							availableMips = peProvisioner.getAvailableMips();
+						} else {
+							/* We cannot allocate any more MIps, abort here */
+							availableMips = 0;
+							break;
 						}
-						pe = peIterator.next();
-						peProvisioner = pe.getPeProvisioner();
-						availableMips = peProvisioner.getAvailableMips();
 					}
 				}
 			}

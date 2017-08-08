@@ -8,11 +8,11 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.List;
-import java.util.Map;
-
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple VM allocation policy that does <b>not</b> perform any optimization on VM allocation.

@@ -8,14 +8,14 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class allows to simulate Root switch which connects Datacenters to external network. 
