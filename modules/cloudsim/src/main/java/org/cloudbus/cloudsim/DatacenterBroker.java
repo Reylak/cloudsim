@@ -226,8 +226,11 @@ public class DatacenterBroker extends SimEntity {
 		if (result == CloudSimTags.TRUE) {
 			if (vm == null)
 				getLogger().warn("received ACK for creation of VM with ID {} that is not known; ignoring", vmId);
-			else
+			else {
+				getVmsToDatacentersMap().put(vmId, datacenterId);
+				getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
 				getLogger().info("created VM {} on host {} of datacenter {}", vm, vm.getHost(), datacenter);
+			}
 		} else {
 			getLogger().error("failed creating VM {} in datacenter {}", vm, datacenter);
 		}
