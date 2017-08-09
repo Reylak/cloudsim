@@ -188,7 +188,7 @@ public class PowerDatacenter extends Datacenter {
 
 		getLogger().info("total power usage for time frame {}: {}",
 					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
-					timeFrameDatacenterEnergy);
+					String.format("%.2fWs", timeFrameDatacenterEnergy));
 
 		setPower(getPower() + timeFrameDatacenterEnergy);
 

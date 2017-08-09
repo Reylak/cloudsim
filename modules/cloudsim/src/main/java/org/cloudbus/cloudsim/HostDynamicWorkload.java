@@ -78,6 +78,7 @@ public class HostDynamicWorkload extends Host {
 
 			if (getLogger().isInfoEnabled()) {
 				getLogger().info("MIps allocation of VM {}: {}/{} [{}], requested {} (got {})",
+						vm,
 						String.format("%.2f", totalAllocatedMips),
 						String.format("%.2f", totalMips),
 						String.format("%.2f%%", totalAllocatedMips / totalMips * 100),

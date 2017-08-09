@@ -511,6 +511,9 @@ public class CloudSim {
 	public static boolean runClockTick() {
 		SimEntity ent;
 		boolean queue_empty;
+
+		getLogger().info("");
+		getLogger().info("SIMULATION DATE: {}", String.format("%.3f", clock()));
 		
 		int entities_size = entities.size();
 

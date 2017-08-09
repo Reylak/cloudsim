@@ -145,7 +145,7 @@ public abstract class RunnerAbstract {
 	 * @param vmAllocationPolicy the vm allocation policy
 	 */
 	protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy) {
-		System.out.println("Starting " + experimentName);
+		getLogger().info("starting " + experimentName);
 
 		try {
 			PowerDatacenter datacenter = (PowerDatacenter) Helper.createDatacenter(
