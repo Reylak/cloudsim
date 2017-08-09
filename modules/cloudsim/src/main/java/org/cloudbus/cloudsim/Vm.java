@@ -625,4 +625,8 @@ public class Vm {
 		getStateHistory().add(newState);
 	}
 
+	@Override
+	public String toString() {
+		return this.getUid();
+	}
 }

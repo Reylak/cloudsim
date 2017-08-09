@@ -173,4 +173,8 @@ public class Pe {
 		return peProvisioner;
 	}
 
+	@Override
+	public String toString() {
+		return String.valueOf(this.getId());
+	}
 }
