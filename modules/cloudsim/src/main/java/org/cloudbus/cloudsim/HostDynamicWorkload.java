@@ -83,7 +83,7 @@ public class HostDynamicWorkload extends Host {
 						String.format("%.2f", totalMips),
 						String.format("%.2f%%", totalAllocatedMips / totalMips * 100),
 						String.format("%.2f", totalRequestedMips),
-						String.format("%.2f%%", totalAllocatedMips / totalRequestedMips * 100)
+						String.format("%.2f%%", (totalRequestedMips == 0 ? 1 : totalAllocatedMips / totalRequestedMips) * 100)
 				);
 
 				String mipsPerPe = getVmScheduler().getPesAllocatedForVM(vm).stream()
