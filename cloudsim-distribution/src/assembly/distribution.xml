@@ -13,16 +13,18 @@
     <files>
         <file>
             <source>${project.parent.basedir}/LICENSE</source>
+            <!-- empty outDirectory tag means "root of the output archive" -->
             <outputDirectory />
             <fileMode>0644</fileMode>
         </file>
     </files>
     <fileSets>
         <fileSet>
+            <directory>src/main</directory>
             <includes>
-                <include>src/main/resources</include>
+                <include>*</include>
             </includes>
-            <outputDirectory />
+            <outputDirectory/>
         </fileSet>
     </fileSets>
 
@@ -31,14 +33,12 @@
             <outputDirectory>lib</outputDirectory>
             <includes>
                 <include>org.cloudbus.cloudsim:cloudsim-library:jar</include>
-                <!--<include>org.cloudbus.cloudsim:cloudsim-library:sources</include>-->
             </includes>
         </dependencySet>
         <dependencySet>
             <outputDirectory>examples</outputDirectory>
             <includes>
                 <include>org.cloudbus.cloudsim:cloudsim-examples:jar</include>
-                <!--<include>org.cloudbus.cloudsim:cloudsim-examples:sources</include>-->
             </includes>
         </dependencySet>
         <dependencySet>
