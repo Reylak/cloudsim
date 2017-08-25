@@ -55,4 +55,17 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <!-- This profile is necessary to relax JDK8's Javadoc, which would otherwise complain about a lot of things
+        for no reasons, whereas JDK7 wouldn't. -->
+        <profile>
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
+    </profiles>
 </project>
