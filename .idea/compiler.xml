@@ -6,7 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="cloudsim-distrib" />
         <module name="cloudsim-distribution" />
         <module name="cloudsim-examples" />
         <module name="cloudsim-library" />
@@ -14,7 +13,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cloudsim" target="1.5" />
-      <module name="cloudsim-distrib" target="1.8" />
       <module name="cloudsim-distribution" target="1.8" />
       <module name="cloudsim-examples" target="1.8" />
       <module name="cloudsim-library" target="1.8" />
