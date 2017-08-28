@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.network;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.StringTokenizer;
 
 /**
@@ -46,8 +47,10 @@ public class GraphReaderBrite implements GraphReaderIF {
 		graph = new TopologicalGraph();
 
 		// lets read the file
-		FileReader fr = new FileReader(filename);
-		BufferedReader br = new BufferedReader(fr);
+        URL fileURL = getClass().getClassLoader().getResource(filename);
+        if (fileURL == null)
+            throw new IOException("graph file \"" + filename + "\" not found");
+        BufferedReader br = new BufferedReader(new FileReader(fileURL.getFile()));
 
 		String lineSep = System.getProperty("line.separator");
 		String nextLine = null;
