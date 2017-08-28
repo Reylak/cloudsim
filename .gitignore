@@ -1,7 +1,6 @@
 target/
-*.class
-/.classpath
-*.jar
+
+*.iml
 /.idea/workspace.xml
 /.idea/dictionaries/
-/.idea/inspectionProfiles
+/.idea/libraries/
