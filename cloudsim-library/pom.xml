@@ -91,5 +91,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- Shutdown logging from classes during tests execution, by using the No-op SLF4J binding. -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.8.0-alpha2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
