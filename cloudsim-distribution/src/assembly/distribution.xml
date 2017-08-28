@@ -1,0 +1,65 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
+            http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <!-- Build the distributed package of Cloudsim.
+
+        * files in "src/main" are added to the root, as well as the LICENSE file at the root of the parent project
+            (notice that the README.md file included, is different from the file at the root of the parent project)
+        * a folder "docs" containing unpacked Javadoc
+        * a folder "lib" containing JARs with the compile library, and its sources
+        * a folder "examples" with the same content, but for the examples
+    -->
+
+    <id>package</id>
+
+    <formats>
+        <format>tar.gz</format>
+        <format>tar.bz2</format>
+        <format>zip</format>
+    </formats>
+
+    <files>
+        <file>
+            <source>${project.parent.basedir}/LICENSE</source>
+            <!-- empty outDirectory tag means "root of the output archive" -->
+            <outputDirectory />
+            <fileMode>0644</fileMode>
+        </file>
+    </files>
+    <fileSets>
+        <fileSet>
+            <directory>src/main</directory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <outputDirectory/>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>org.cloudbus.cloudsim:cloudsim-library:jar</include>
+            </includes>
+            <!-- excluse Javadoc from library inclusion, as it is included later in the "docs" folder -->
+            <excludes>
+                <exclude>org.cloudbus.cloudsim:cloudsim-library:*:javadoc</exclude>
+            </excludes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>examples</outputDirectory>
+            <includes>
+                <include>org.cloudbus.cloudsim:cloudsim-examples:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs</outputDirectory>
+            <includes>
+                <include>org.cloudbus.cloudsim:cloudsim-library:*:javadoc</include>
+            </includes>
+            <unpack>true</unpack>
+        </dependencySet>
+    </dependencySets>
+</assembly>

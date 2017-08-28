@@ -8,7 +8,7 @@ CloudSim is developed in [the Cloud Computing and Distributed Systems (CLOUDS) L
 
 More information can be found on the [CloudSim's web site](http://cloudbus.org/cloudsim/).
 
-This repository contains my various fixes and improvements over the CloudSim framework.
+This version contains various fixes and improvements over the CloudSim framework.
 
 ## Main features
 
@@ -33,20 +33,22 @@ giving him full control over the logging behavior
 CloudSim is tested and runs on **Sun's Java and OpenJDK version 8.** Older versions of Java are not compatible. If you
 have non-Sun Java version, such as gcj or J++, they may or may not be compatible.
 
-You also need to install either Maven or Ant if you wish to compile CloudSim.
+## Package content
+
+ * docs: Javadoc under HTML form;
+ * library: JAR archives containing compiled CloudSim simulation library and corresponding sources;
+ * examples: JAR archives containing compiled CloudSim examples and corresponding sources;
 
 ## Quick start
 
-You can run some examples from the likely named folder. Please check the README inside this folder.
+You can run some examples from the JAR "examples/cloudsim-examples.jar", under the package `org.cloudbus.cloudsim.examples`.
+You can check the sources to know the list of all available examples.
 
-To use the CloudSim simulation library, you can either:
+**CloudSim library can be used from the JAR "lib/cloudsim.jar".**
 
- * compile it using Ant: run `ant`;
- * compile and package it using Maven: run `mvn package`;
- * install it using Maven, to the local Maven repository: run `mvn install` (recommended).
- 
-Original CloudSim project is available on online Maven repositories, so you can also specify it as a dependency to your
-project. However, my CloudSim version **is not on Maven repositories** so local installation is the only way.
+If using Maven, you may want to clone the repository this
+package comes from, and run `mvn install` to make the dependency `org.cloudbus.cloudsim:cloudsim-library` available from
+your local repository. Also, the original CloudSim framework is available on Maven repositories, but **this version is not.**
 
 ## Documentation
 
