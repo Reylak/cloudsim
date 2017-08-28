@@ -14,7 +14,6 @@
     <name>CloudSim simulation library</name>
 
     <build>
-        <finalName>cloudsim</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
