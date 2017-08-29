@@ -6,7 +6,7 @@
     <groupId>org.cloudbus.cloudsim</groupId>
     <artifactId>cloudsim</artifactId>
     <packaging>pom</packaging>
-    <version>4.0-SNAPSHOT</version>
+    <version>5.0-SNAPSHOT</version>
     <name>CloudSim</name>
     <description>
         CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services

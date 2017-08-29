@@ -1,0 +1,11 @@
+5.0 release of CloudSim brings:
+ * cleaning of meta-information of the repository
+ * various fixes in code logic, including:
+    * determining of date of next event in simulation
+    * mapping allocating of PEs to VMs
+    * computing of date of end of migration
+    * destroying all VMs
+    * and more
+ * improving interface for the computation of power consumption of a host
+ * replace custom logging system with SLF4J
+ * reorganize repository structure and Maven build process
