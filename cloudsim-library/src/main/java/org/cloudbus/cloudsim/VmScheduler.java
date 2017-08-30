@@ -121,7 +121,11 @@ public abstract class VmScheduler {
 	 * @return the pes allocated for the given vm
 	 */
 	public Set<Pe> getPesAllocatedForVM(Vm vm) {
-		return getPeMap().get(vm.getUid());
+		Set<Pe> pes = getPeMap().get(vm.getUid());
+		if (pes == null)
+			pes = new HashSet<>();
+
+		return pes;
 	}
 
 	/**
