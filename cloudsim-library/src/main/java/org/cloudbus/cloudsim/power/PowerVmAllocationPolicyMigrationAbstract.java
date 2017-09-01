@@ -45,7 +45,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
          * It should be used just a Map<Vm, Host> to find out 
          * what PM is hosting a given VM.
          */
-	private final List<Map<String, Object>> savedAllocation = new ArrayList<Map<String, Object>>();
+	private final Map<Vm, Host> savedAllocation = new HashMap<>();
 
 	/** A map of CPU utilization history (in percentage) for each host,
          where each key is a host id and each value is the CPU utilization percentage history.*/
@@ -495,15 +495,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	protected void saveAllocation() {
 		getSavedAllocation().clear();
 		for (Host host : getHostList()) {
-			for (Vm vm : host.getVmList()) {
-				if (host.getVmsMigratingIn().contains(vm)) {
-					continue;
-				}
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("host", host);
-				map.put("vm", vm);
-				getSavedAllocation().add(map);
-			}
+			for (Vm vm : host.getVmList().stream()
+							 .filter(vm -> !host.getVmsMigratingIn().contains(vm))
+							 .collect(Collectors.toList()))
+				this.savedAllocation.put(vm, host);
 		}
 	}
 
@@ -516,9 +511,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			host.vmDestroyAll();
 			host.reallocateMigratingInVms();
 		}
-		for (Map<String, Object> map : getSavedAllocation()) {
-			Vm vm = (Vm) map.get("vm");
-			PowerHost host = (PowerHost) map.get("host");
+		for (Map.Entry<Vm, Host> allocation: getSavedAllocation().entrySet()) {
+		    Vm vm = allocation.getKey();
+		    Host host = allocation.getValue();
 			if (!host.vmCreate(vm)) {
 				getLogger().error("failed restoring allocation of VM {} on host {}", vm, host);
 				System.exit(0);
@@ -590,7 +585,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * 
 	 * @return the saved allocation
 	 */
-	protected List<Map<String, Object>> getSavedAllocation() {
+	protected Map<Vm, Host> getSavedAllocation() {
 		return savedAllocation;
 	}
 
