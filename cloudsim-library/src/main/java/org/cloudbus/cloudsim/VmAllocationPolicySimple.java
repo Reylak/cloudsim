@@ -182,9 +182,8 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	}
 
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<? extends Vm, ? extends Host> optimizeAllocation(List<? extends Vm> vmList) {
+		return new HashMap<>();
 	}
 
 	@Override

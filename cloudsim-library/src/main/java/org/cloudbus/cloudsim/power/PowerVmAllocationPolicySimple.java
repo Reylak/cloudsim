@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.power;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +49,9 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
          * @return 
          */
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-                //@todo It is better to return an empty map in order to avoid NullPointerException or extra null checks
+	public Map<? extends Vm, ? extends Host> optimizeAllocation(List<? extends Vm> vmList) {
 		// This policy does not optimize the VM allocation
-		return null;
+		return new HashMap<>();
 	}
 
 }

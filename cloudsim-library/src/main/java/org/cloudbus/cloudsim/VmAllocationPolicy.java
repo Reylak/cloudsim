@@ -76,7 +76,7 @@ public abstract class VmAllocationPolicy {
          * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 
          * 
 	 */
-	public abstract List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList);
+	public abstract Map<? extends Vm, ? extends Host> optimizeAllocation(List<? extends Vm> vmList);
 
 	/**
 	 * Releases the host used by a VM.

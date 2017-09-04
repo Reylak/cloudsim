@@ -42,7 +42,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	/**
 	 * Creates a new VmAllocationPolicySimple object.
 	 * 
-	 * @param list list Machines available in a {@link Datacenter}
+	 * @param list list Machines available in a {@link org.cloudbus.cloudsim.Datacenter}
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -219,10 +219,9 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	}
 
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		/*@todo Auto-generated method stub.
-                The method is doing nothing.*/
-		return null;
+	public Map<? extends Vm, ? extends Host> optimizeAllocation(List<? extends Vm> vmList) {
+		/* Nothing to do. */
+		return new HashMap<>();
 	}
 
 	@Override

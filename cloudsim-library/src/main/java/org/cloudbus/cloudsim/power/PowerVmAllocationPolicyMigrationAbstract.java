@@ -109,7 +109,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @return the array list< hash map< string, object>>
 	 */
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
+	public Map<? extends Vm, ? extends PowerHost> optimizeAllocation(List<? extends Vm> vmList) {
 		ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
 		ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
@@ -127,12 +127,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		getExecutionTimeHistoryVmSelection().add(ExecutionTimeMeasurer.end("optimizeAllocationVmSelection"));
 
 		ExecutionTimeMeasurer.start("optimizeAllocationVmReallocation");
-		List<Map<String, Object>> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<Host>(
+		Map<Vm, PowerHost> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<Host>(
 				overUtilizedHosts));
 		getExecutionTimeHistoryVmReallocation().add(
 				ExecutionTimeMeasurer.end("optimizeAllocationVmReallocation"));
 
-		migrationMap.addAll(getMigrationMapFromUnderUtilizedHosts(overUtilizedHosts));
+		migrationMap.putAll(getMigrationMapFromUnderUtilizedHosts(overUtilizedHosts));
 
 		restoreAllocation();
 
@@ -147,16 +147,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param overUtilizedHosts the over utilized hosts
 	 * @return the migration map from under utilized hosts
 	 */
-	protected List<Map<String, Object>> getMigrationMapFromUnderUtilizedHosts(
+	protected Map<Vm, ? extends PowerHost> getMigrationMapFromUnderUtilizedHosts(
 			List<PowerHostUtilizationHistory> overUtilizedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+		Map<Vm, PowerHost> migrationMap = new HashMap<>();
 		List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
 
-		// over-utilized hosts + hosts that are selected to migrate VMs to from over-utilized hosts
-		Set<PowerHost> excludedHostsForFindingUnderUtilizedHost = new HashSet<PowerHost>();
+		Set<PowerHost> excludedHostsForFindingUnderUtilizedHost = new HashSet<>();
 		excludedHostsForFindingUnderUtilizedHost.addAll(overUtilizedHosts);
 		excludedHostsForFindingUnderUtilizedHost.addAll(switchedOffHosts);
-		excludedHostsForFindingUnderUtilizedHost.addAll(extractHostListFromMigrationMap(migrationMap));
 
 		// over-utilized + under-utilized hosts
 		Set<PowerHost> excludedHostsForFindingNewVmPlacement = new HashSet<PowerHost>();
@@ -166,14 +164,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		int numberOfHosts = getHostList().size();
 
 		while (true) {
-			if (numberOfHosts == excludedHostsForFindingUnderUtilizedHost.size()) {
+			if (numberOfHosts == excludedHostsForFindingUnderUtilizedHost.size())
 				break;
-			}
 
 			PowerHost underUtilizedHost = getUnderUtilizedHost(excludedHostsForFindingUnderUtilizedHost);
-			if (underUtilizedHost == null) {
+			if (underUtilizedHost == null)
 				break;
-			}
 
 			getLogger().debug("emptying underused host {}", underUtilizedHost);
 
@@ -181,22 +177,21 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			excludedHostsForFindingNewVmPlacement.add(underUtilizedHost);
 
 			List<? extends Vm> vmsToMigrateFromUnderUtilizedHost = getVmsToMigrateFromUnderUtilizedHost(underUtilizedHost);
-			if (vmsToMigrateFromUnderUtilizedHost.isEmpty()) {
+			if (vmsToMigrateFromUnderUtilizedHost.isEmpty())
 				continue;
-			}
 
 			getLogger().debug("trying to relocate VMs {}",
 					vmsToMigrateFromUnderUtilizedHost.stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(", ")));
 
-			List<Map<String, Object>> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
+			Map<Vm, PowerHost> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
 					vmsToMigrateFromUnderUtilizedHost,
 					excludedHostsForFindingNewVmPlacement);
 
-			excludedHostsForFindingUnderUtilizedHost.addAll(extractHostListFromMigrationMap(newVmPlacement));
+			excludedHostsForFindingUnderUtilizedHost.addAll(newVmPlacement.values());
 
-			migrationMap.addAll(newVmPlacement);
+			migrationMap.putAll(newVmPlacement);
 		}
 
 		return migrationMap;
@@ -212,11 +207,11 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param excludedHosts the excluded hosts
 	 * @return the host found to host the VM
 	 */
-	public PowerHost findHostForVm(Vm vm, Set<? extends Host> excludedHosts) {
+	public <T extends PowerHost> T findHostForVm(Vm vm, Set<? extends Host> excludedHosts) {
 		double minPower = Double.MAX_VALUE;
-		PowerHost allocatedHost = null;
+		T allocatedHost = null;
 
-		for (PowerHost host : this.<PowerHost> getHostList()) {
+		for (T host : this.<T>getHostList()) {
 			if (excludedHosts.contains(host)) {
 				continue;
 			}
@@ -267,42 +262,25 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	}
 
 	/**
-	 * Extracts the host list from a migration map.
-	 * 
-	 * @param migrationMap the migration map
-	 * @return the list
-	 */
-	protected List<PowerHost> extractHostListFromMigrationMap(List<Map<String, Object>> migrationMap) {
-		List<PowerHost> hosts = new LinkedList<PowerHost>();
-		for (Map<String, Object> map : migrationMap) {
-			hosts.add((PowerHost) map.get("host"));
-		}
-		return hosts;
-	}
-
-	/**
 	 * Gets a new vm placement considering the list of VM to migrate.
 	 * 
 	 * @param vmsToMigrate the list of VMs to migrate
 	 * @param excludedHosts the list of hosts that aren't selected as destination hosts
 	 * @return the new vm placement map
 	 */
-	protected List<Map<String, Object>> getNewVmPlacement(
+	protected <T extends PowerHost> Map<Vm, T> getNewVmPlacement(
 			List<? extends Vm> vmsToMigrate,
 			Set<? extends Host> excludedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+		Map<Vm, T> migrationMap = new HashMap<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 		for (Vm vm : vmsToMigrate) {
-			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+			T allocatedHost = findHostForVm(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.vmCreate(vm);
 
 				getLogger().debug("allocated VM {} to host {}", vm, allocatedHost);
 
-				Map<String, Object> migrate = new HashMap<String, Object>();
-				migrate.put("vm", vm);
-				migrate.put("host", allocatedHost);
-				migrationMap.add(migrate);
+				migrationMap.put(vm, allocatedHost);
 			}
 		}
 		return migrationMap;
@@ -315,10 +293,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param excludedHosts the list of hosts that aren't selected as destination hosts
 	 * @return the new vm placement from under utilized host
 	 */
-	protected List<Map<String, Object>> getNewVmPlacementFromUnderUtilizedHost(
+	protected Map<Vm, PowerHost> getNewVmPlacementFromUnderUtilizedHost(
 			List<? extends Vm> vmsToMigrate,
 			Set<? extends Host> excludedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+		Map<Vm, PowerHost> migrationMap = new HashMap<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 		for (Vm vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
@@ -327,16 +305,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 
 				getLogger().debug("allocated VM {} to host {}", vm, allocatedHost);
 
-				Map<String, Object> migrate = new HashMap<String, Object>();
-				migrate.put("vm", vm);
-				migrate.put("host", allocatedHost);
-				migrationMap.add(migrate);
+				migrationMap.put(vm, allocatedHost);
 			} else {
 				getLogger().debug("failed relocating all VMs from underused host {}; cancelling relocation", vm.getHost());
 
-				for (Map<String, Object> map : migrationMap) {
-					((Host) map.get("host")).vmDestroy((Vm) map.get("vm"));
-				}
+				for (Map.Entry<Vm, PowerHost> entry: migrationMap.entrySet())
+					entry.getValue().vmDestroy(entry.getKey());
 				migrationMap.clear();
 				break;
 			}
