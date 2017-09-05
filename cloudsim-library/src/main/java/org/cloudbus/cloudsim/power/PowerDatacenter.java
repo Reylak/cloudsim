@@ -208,13 +208,17 @@ public class PowerDatacenter extends Datacenter {
 	}
 
 	@Override
-	protected void processVmMigrate(SimEvent ev, boolean ack) {
+	protected boolean processVmMigrate(Vm vm, Host host) {
 		updateCloudetProcessingWithoutSchedulingFutureEvents();
-		super.processVmMigrate(ev, ack);
+
+		boolean res = super.processVmMigrate(vm, host);
+
 		SimEvent event = CloudSim.findFirstDeferred(getId(), new PredicateType(CloudSimTags.VM_MIGRATE));
 		if (event == null || event.eventTime() > CloudSim.clock()) {
 			updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 		}
+
+		return res;
 	}
 
 	@Override

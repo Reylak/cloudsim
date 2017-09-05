@@ -497,9 +497,8 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
 		Object tmp = ev.getData();
-		if (!(tmp instanceof Map<?, ?>)) {
+		if (!(tmp instanceof Map<?, ?>))
 			throw new ClassCastException("The data object must be Map<String, Object>");
-		}
 
 		@SuppressWarnings("unchecked")
 		Map<String, Object> migrate = (HashMap<String, Object>) tmp;
@@ -507,31 +506,35 @@ public class Datacenter extends SimEntity {
 		Vm vm = (Vm) migrate.get("vm");
 		Host host = (Host) migrate.get("host");
 
-		getVmAllocationPolicy().deallocateHostForVm(vm);
-		host.removeMigratingInVm(vm);
-		boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
-		if (!result) {
-			getLogger().error("allocation of migrating VM {} to destination host {} failed", vm, host);
-			System.exit(0);
-		}
+		boolean result = this.processVmMigrate(vm, host);
 
 		if (ack) {
 			int[] data = new int[3];
 			data[0] = getId();
 			data[1] = vm.getId();
+			data[2] = result ? CloudSimTags.TRUE : CloudSimTags.FALSE;
 
-			if (result) {
-				data[2] = CloudSimTags.TRUE;
-			} else {
-				data[2] = CloudSimTags.FALSE;
-			}
 			sendNow(ev.getSource(), CloudSimTags.VM_CREATE_ACK, data);
 		}
 
 		getLogger().info("migration of VM {} to host {} is complete", vm, host);
-
-		vm.setInMigration(false);
 	}
+
+	protected boolean processVmMigrate(Vm vm, Host host) {
+        getVmAllocationPolicy().deallocateHostForVm(vm);
+        host.removeMigratingInVm(vm);
+
+        boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
+
+        if (!result) {
+            getLogger().error("allocation of migrating VM {} to destination host {} failed", vm, host);
+            System.exit(0);
+        }
+
+        vm.setInMigration(false);
+
+        return result;
+    }
 
 	/**
 	 * Processes a Cloudlet based on the event type.
