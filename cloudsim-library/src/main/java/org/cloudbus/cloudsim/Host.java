@@ -488,7 +488,7 @@ public class Host {
 	 * 
 	 * @param vmScheduler the vm scheduler
 	 */
-	protected void setVmScheduler(VmScheduler vmScheduler) {
+	public void setVmScheduler(VmScheduler vmScheduler) {
 		this.vmScheduler = vmScheduler;
 	}
 
