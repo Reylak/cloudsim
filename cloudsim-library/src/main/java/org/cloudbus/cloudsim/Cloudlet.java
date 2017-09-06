@@ -1634,4 +1634,8 @@ public class Cloudlet {
         return getUtilizationModelBw().getUtilization(time);
     }
 
+    @Override
+    public String toString() {
+        return Integer.toString(this.cloudletId);
+    }
 }
