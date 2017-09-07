@@ -292,4 +292,9 @@ public class HostDynamicWorkload extends Host {
 		getStateHistory().add(newState);
 	}
 
+	@Override
+	protected void vmDeallocate(Vm vm) {
+		this.utilizationMips -= getVmScheduler().getTotalAllocatedMipsForVm(vm);
+		super.vmDeallocate(vm);
+	}
 }
