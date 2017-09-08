@@ -61,16 +61,8 @@ public class Datacenter extends SimEntity {
 	 * @param characteristics the characteristics of the datacenter to be created
 	 * @param storageList a List of storage elements, for data simulation
 	 * @param vmAllocationPolicy the policy to be used to allocate VMs into hosts
-         * @param schedulingInterval the scheduling delay to process each datacenter received event
-	 * @throws Exception when one of the following scenarios occur:
-	 *  <ul>
-	 *    <li>creating this entity before initializing CloudSim package
-	 *    <li>this entity name is <tt>null</tt> or empty
-	 *    <li>this entity has <tt>zero</tt> number of PEs (Processing Elements). <br/>
-	 *    No PEs mean the Cloudlets can't be processed. A CloudResource must contain 
-	 *    one or more Machines. A Machine must contain one or more PEs.
-	 *  </ul>
-         * 
+	 * @param schedulingInterval the scheduling delay to process each datacenter received event
+	 *
 	 * @pre name != null
 	 * @pre resource != null
 	 * @post $none
@@ -80,24 +72,18 @@ public class Datacenter extends SimEntity {
 			DatacenterCharacteristics characteristics,
 			VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList,
-			double schedulingInterval) throws Exception {
+			double schedulingInterval) {
 		super(name);
 
 		setCharacteristics(characteristics);
 		setVmAllocationPolicy(vmAllocationPolicy);
 		setLastProcessTime(0.0);
 		setStorageList(storageList);
-		setVmList(new ArrayList<Vm>());
+		setVmList(new ArrayList<>());
 		setSchedulingInterval(schedulingInterval);
 
 		for (Host host : getCharacteristics().getHostList()) {
 			host.setDatacenter(this);
-		}
-
-		// If this resource doesn't have any PEs then no useful at all
-		if (getCharacteristics().getNumberOfPes() == 0) {
-                    throw new Exception(super.getName()
-                        + " : Error - this entity has no PEs. Therefore, can't process any Cloudlets.");
 		}
 
 		// stores id of this class

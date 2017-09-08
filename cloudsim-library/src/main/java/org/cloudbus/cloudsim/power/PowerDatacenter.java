@@ -65,7 +65,7 @@ public class PowerDatacenter extends Datacenter {
 			DatacenterCharacteristics characteristics,
 			VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList,
-			double schedulingInterval) throws Exception {
+			double schedulingInterval) {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
 
 		setPower(0.0);

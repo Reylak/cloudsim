@@ -37,7 +37,7 @@ public class PowerDatacenterBroker extends DatacenterBroker {
 	 * @param name the name of the broker
 	 * @throws Exception the exception
 	 */
-	public PowerDatacenterBroker(String name) throws Exception {
+	public PowerDatacenterBroker(String name) {
 		super(name);
 	}
 

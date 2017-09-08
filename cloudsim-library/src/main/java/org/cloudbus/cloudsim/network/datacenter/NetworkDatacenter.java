@@ -92,12 +92,12 @@ public class NetworkDatacenter extends Datacenter {
 			DatacenterCharacteristics characteristics,
 			VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList,
-			double schedulingInterval) throws Exception {
+			double schedulingInterval) {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
-		VmToSwitchid = new HashMap<Integer, Integer>();
-		HostToSwitchid = new HashMap<Integer, Integer>();
-		VmtoHostlist = new HashMap<Integer, Integer>();
-		Switchlist = new HashMap<Integer, Switch>();
+		VmToSwitchid = new HashMap<>();
+		HostToSwitchid = new HashMap<>();
+		VmtoHostlist = new HashMap<>();
+		Switchlist = new HashMap<>();
 	}
 
 	/**

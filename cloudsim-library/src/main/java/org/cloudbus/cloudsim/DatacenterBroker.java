@@ -75,28 +75,27 @@ public class DatacenterBroker extends SimEntity {
 	 * Created a new DatacenterBroker object.
 	 * 
 	 * @param name name to be associated with this entity (as required by {@link SimEntity} class)
-	 * @throws Exception the exception
 	 * @pre name != null
 	 * @post $none
 	 */
-	public DatacenterBroker(String name) throws Exception {
+	public DatacenterBroker(String name) {
 		super(name);
 
-		setVmList(new ArrayList<Vm>());
-		setVmsCreatedList(new ArrayList<Vm>());
-		setCloudletList(new ArrayList<Cloudlet>());
-		setCloudletSubmittedList(new ArrayList<Cloudlet>());
-		setCloudletReceivedList(new ArrayList<Cloudlet>());
+		setVmList(new ArrayList<>());
+		setVmsCreatedList(new ArrayList<>());
+		setCloudletList(new ArrayList<>());
+		setCloudletSubmittedList(new ArrayList<>());
+		setCloudletReceivedList(new ArrayList<>());
 
 		cloudletsSubmitted = 0;
 		setVmsRequested(0);
 		setVmsAcks(0);
 		setVmsDestroyed(0);
 
-		setDatacenterIdsList(new LinkedList<Integer>());
-		setDatacenterRequestedIdsList(new ArrayList<Integer>());
-		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		setDatacenterIdsList(new LinkedList<>());
+		setDatacenterRequestedIdsList(new ArrayList<>());
+		setVmsToDatacentersMap(new HashMap<>());
+		setDatacenterCharacteristicsList(new HashMap<>());
 
 		getLogger().setPrefix("broker {}: ");
 	}

@@ -54,7 +54,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			DatacenterCharacteristics characteristics,
 			VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList,
-			double schedulingInterval) throws Exception {
+			double schedulingInterval) {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
 	}
 
