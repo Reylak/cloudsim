@@ -617,10 +617,11 @@ public class Vm {
 				isInMigration);
 		if (!getStateHistory().isEmpty()) {
 			VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
-			if (previousState.getTime() == time) {
-				getStateHistory().set(getStateHistory().size() - 1, newState);
-				return;
-			}
+			/* There must have been a reason a state history entry was added for this date, so keep
+			 * it but move back in time by 1s.
+			 */
+			if (previousState.getTime() == time)
+			    getStateHistory().get(getStateHistory().size() - 1).setTime(time - 1);
 		}
 		getStateHistory().add(newState);
 	}
