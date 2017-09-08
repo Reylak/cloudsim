@@ -196,13 +196,13 @@ public class Helper {
 		for (Vm vm : vms) {
 			boolean previousIsInMigration = false;
 			double lastTimeMigrationFinished = 0;
+
 			for (VmStateHistoryEntry entry : vm.getStateHistory()) {
-				if (previousIsInMigration == true && entry.isInMigration() == false) {
+				if (!previousIsInMigration && entry.isInMigration())
 					timeBeforeVmMigration.add(entry.getTime() - lastTimeMigrationFinished);
-				}
-				if (previousIsInMigration == false && entry.isInMigration() == true) {
+				if (previousIsInMigration && !entry.isInMigration())
 					lastTimeMigrationFinished = entry.getTime();
-				}
+
 				previousIsInMigration = entry.isInMigration();
 			}
 		}
