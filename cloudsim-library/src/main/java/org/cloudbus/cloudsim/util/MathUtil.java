@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim.util;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
@@ -131,19 +132,8 @@ public class MathUtil {
 	 * @return the variance
 	 */
 	public static double variance(final List<Double> list) {
-		long n = 0;
-		double mean = mean(list);
-		double s = 0.0;
-
-		for (double x : list) {
-			n++;
-			double delta = x - mean;
-			mean += delta / n;
-			s += delta * (x - mean);
-		}
-		// if you want to calculate std deviation
-		// of a sample change this to (s/(n-1))
-		return s / (n - 1);
+		double[] values = list.stream().mapToDouble(Double::doubleValue).toArray();
+		return new Variance().evaluate(values);
 	}
 
 	/**
