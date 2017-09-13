@@ -56,7 +56,7 @@ public class NetworkExample4 {
 			boolean trace_flag = false;  // mean trace events
 
 			// Initialize the CloudSim library
-			CloudSim.init(num_user, calendar, trace_flag);
+			CloudSim.init(num_user, calendar);
 
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation

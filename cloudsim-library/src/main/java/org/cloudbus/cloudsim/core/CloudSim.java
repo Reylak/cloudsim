@@ -47,10 +47,6 @@ public class CloudSim {
 	/** The Constant NOT_FOUND. */
 	private static final int NOT_FOUND = -1;
 
-	/** The trace flag. */
-	@SuppressWarnings("unused")
-	private static boolean traceFlag = false;
-
 	/** The calendar. */
 	private static Calendar calendar = null;
 
@@ -66,18 +62,16 @@ public class CloudSim {
 	 * Initialises all the common attributes.
 	 * 
 	 * @param _calendar the _calendar
-	 * @param _traceFlag the _trace flag
 	 * @param numUser number of users
 	 * @throws Exception This happens when creating this entity before initialising CloudSim package
 	 *             or this entity name is <tt>null</tt> or empty
 	 * @pre $none
 	 * @post $none
 	 */
-	private static void initCommonVariable(Calendar _calendar, boolean _traceFlag, int numUser)
+	private static void initCommonVariable(Calendar _calendar, int numUser)
 			throws Exception {
 		initialize();
 		// NOTE: the order for the below 3 lines are important
-		traceFlag = _traceFlag;
 
 		// Set the current Wall clock time as the starting time of
 		// simulation
@@ -107,15 +101,14 @@ public class CloudSim {
 	 *            END_OF_SIMULATION signal before issuing terminate signal to other entities
 	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
 	 *            taken from <tt>Calendar.getInstance()</tt>
-	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
 	 * @see gridsim.CloudSimShutdown
 	 * @see CloudInformationService.CloudInformationService
 	 * @pre numUser >= 0
 	 * @post $none
 	 */
-	public static void init(int numUser, Calendar cal, boolean traceFlag) {
+	public static void init(int numUser, Calendar cal) {
 		try {
-			initCommonVariable(cal, traceFlag, numUser);
+			initCommonVariable(cal, numUser);
 
 			// create a GIS object
 			cis = new CloudInformationService("CloudInformationService");
@@ -142,7 +135,6 @@ public class CloudSim {
 	 *            END_OF_SIMULATION signal before issuing terminate signal to other entities
 	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
 	 *            taken from <tt>Calendar.getInstance()</tt>
-	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
 	 * @param periodBetweenEvents - the minimal period between events. Events within shorter periods
 	 * after the last event are discarded.
 	 * @see gridsim.CloudSimShutdown
@@ -150,12 +142,12 @@ public class CloudSim {
 	 * @pre numUser >= 0
 	 * @post $none
 	 */
-	public static void init(int numUser, Calendar cal, boolean traceFlag, double periodBetweenEvents) {
+	public static void init(int numUser, Calendar cal, double periodBetweenEvents) {
 	    if (periodBetweenEvents <= 0) {
 		throw new IllegalArgumentException("The minimal time between events should be positive, but is:" + periodBetweenEvents);
 	    }
 	    
-	    init(numUser, cal, traceFlag);
+	    init(numUser, cal);
 	    minTimeBetweenEvents = periodBetweenEvents;
 	}
 	
@@ -186,7 +178,6 @@ public class CloudSim {
 			shutdownId = -1;
 			cis = null;
 			calendar = null;
-			traceFlag = false;
 
 			return clock;
 		} catch (IllegalArgumentException e) {

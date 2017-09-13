@@ -55,7 +55,7 @@ public class NonPowerAware {
 		getLogger().info("starting {}", experimentName);
 
 		try {
-			CloudSim.init(1, Calendar.getInstance(), false);
+			CloudSim.init(1, Calendar.getInstance());
 
 			DatacenterBroker broker = Helper.createBroker();
 			int brokerId = broker.getId();

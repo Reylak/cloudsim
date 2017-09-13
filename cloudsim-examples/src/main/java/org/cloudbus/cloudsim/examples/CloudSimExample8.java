@@ -105,7 +105,7 @@ public class CloudSimExample8 {
 			boolean trace_flag = false;  // mean trace events
 
 			// Initialize the CloudSim library
-			CloudSim.init(num_user, calendar, trace_flag);
+			CloudSim.init(num_user, calendar);
 
 			GlobalBroker globalBroker = new GlobalBroker("GlobalBroker");
 

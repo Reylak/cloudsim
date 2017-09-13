@@ -35,7 +35,7 @@ public class CloudSimShutdown extends SimEntity {
 	 * @param numUser total number of cloud user entities
 	 * @throws Exception when creating this entity before initialising CloudSim package
 	 *             or this entity name is <tt>null</tt> or empty
-	 * @see CloudSim#init(int, java.util.Calendar, boolean) 
+	 * @see #init(int, java.util.Calendar)
 	 * @pre name != null
 	 * @pre numUser >= 0
 	 * @post $none

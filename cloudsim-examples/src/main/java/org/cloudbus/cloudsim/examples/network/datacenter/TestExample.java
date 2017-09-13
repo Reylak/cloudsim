@@ -40,7 +40,7 @@ public class TestExample {
 			boolean trace_flag = false; // mean trace events
 
 			// Initialize the CloudSim library
-			CloudSim.init(num_user, calendar, trace_flag);
+			CloudSim.init(num_user, calendar);
 
 			// Second step: Create Datacenters
 			// Datacenters are the resource providers in CloudSim. We need at

@@ -60,7 +60,7 @@ public class RandomRunner extends RunnerAbstract {
 	@Override
 	protected void init(String inputFolder) {
 		try {
-			CloudSim.init(1, Calendar.getInstance(), false);
+			CloudSim.init(1, Calendar.getInstance());
 
 			broker = Helper.createBroker();
 			int brokerId = broker.getId();

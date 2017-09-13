@@ -69,7 +69,7 @@ public class CloudSimExample1 {
 			 * the cisId(whose default value is -1) is 1
 			 * Comment End - Dinesh Bhagwat
 			 */
-			CloudSim.init(num_user, calendar, trace_flag);
+			CloudSim.init(num_user, calendar);
 
 			// Second step: Create Datacenters
 			// Datacenters are the resource providers in CloudSim. We need at
