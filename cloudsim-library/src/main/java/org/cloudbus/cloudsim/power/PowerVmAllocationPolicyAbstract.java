@@ -75,12 +75,17 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	 */
 	public PowerHost findHostForVm(Vm vm) {
 		for (PowerHost host : this.<PowerHost> getHostList()) {
-			if (host.isSuitableForVm(vm)) {
+			if (isHostSuitableForVm(host, vm))
 				return host;
-			}
 		}
 		return null;
 	}
+
+    public boolean isHostSuitableForVm(PowerHost host, Vm vm) {
+        return host.getTotalMips() - host.getVmList().stream().mapToDouble(Vm::getTotalMips).sum() >= vm.getTotalMips() &&
+                host.getRamProvisioner().isSuitableForVm(vm, vm.getRam()) &&
+                host.getBwProvisioner().isSuitableForVm(vm, vm.getBw());
+    }
 
 	@Override
 	public void deallocateHostForVm(Vm vm) {

@@ -58,15 +58,6 @@ public class HostTest {
 	}
 
 	@Test
-	public void testIsSuitableForVm() {
-		Vm vm0 = new Vm(0, 0, MIPS, 2, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 2));
-		Vm vm1 = new Vm(1, 0, MIPS * 2, 1, RAM * 2, BW * 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS * 2, 2));
-
-		assertTrue(host.isSuitableForVm(vm0));
-		assertFalse(host.isSuitableForVm(vm1));
-	}
-
-	@Test
 	public void testVmCreate() {
 		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS / 2, 1));
 		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));

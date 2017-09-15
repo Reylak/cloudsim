@@ -215,7 +215,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			if (excludedHosts.contains(host)) {
 				continue;
 			}
-			if (host.isSuitableForVm(vm)) {
+			if (isHostSuitableForVm(host, vm)) {
 				if (getUtilizationOfCpuMips(host) != 0 && isHostOverUtilizedAfterAllocation(host, vm)) {
 					continue;
 				}

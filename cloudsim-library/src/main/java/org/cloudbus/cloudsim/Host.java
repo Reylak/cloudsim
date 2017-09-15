@@ -193,20 +193,6 @@ public class Host {
 	}
 
 	/**
-	 * Checks if the host is suitable for vm. If it has enough resources
-         * to attend the VM.
-	 * 
-	 * @param vm the vm
-	 * @return true, if is suitable for vm
-	 */
-	public boolean isSuitableForVm(Vm vm) {
-		return (getVmScheduler().getPeCapacity() >= vm.getCurrentRequestedMaxMips()
-				&& getVmScheduler().getAvailableMips() >= vm.getCurrentRequestedTotalMips()
-				&& getRamProvisioner().isSuitableForVm(vm, vm.getCurrentRequestedRam()) && getBwProvisioner()
-				.isSuitableForVm(vm, vm.getCurrentRequestedBw()));
-	}
-
-	/**
 	 * Try to allocate resources to a new VM in the Host.
 	 * 
 	 * @param vm Vm being started
