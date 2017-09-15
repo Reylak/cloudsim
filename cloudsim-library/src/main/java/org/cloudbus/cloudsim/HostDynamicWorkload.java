@@ -293,6 +293,15 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	@Override
+	public boolean vmCreate(Vm vm) {
+		boolean ret = super.vmCreate(vm);
+
+		utilizationMips += getVmScheduler().getTotalAllocatedMipsForVm(vm);
+
+		return ret;
+	}
+
+	@Override
 	protected void vmDeallocate(Vm vm) {
 		this.utilizationMips -= getVmScheduler().getTotalAllocatedMipsForVm(vm);
 		super.vmDeallocate(vm);
