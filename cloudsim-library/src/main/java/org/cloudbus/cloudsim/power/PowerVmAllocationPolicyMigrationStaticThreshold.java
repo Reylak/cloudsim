@@ -59,7 +59,7 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	 * @return true, if the host is over utilized; false otherwise
 	 */
 	@Override
-	protected boolean isHostOverUtilized(PowerHost host) {
+	public boolean isHostOverUtilized(PowerHost host) {
 		addHistoryEntry(host, getUtilizationThreshold());
 		double totalRequestedMips = 0;
 		for (Vm vm : host.getVmList()) {
@@ -74,7 +74,7 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	 * 
 	 * @param utilizationThreshold the new utilization threshold
 	 */
-	protected void setUtilizationThreshold(double utilizationThreshold) {
+	public void setUtilizationThreshold(double utilizationThreshold) {
 		this.utilizationThreshold = utilizationThreshold;
 	}
 
@@ -83,7 +83,7 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	 * 
 	 * @return the utilization threshold
 	 */
-	protected double getUtilizationThreshold() {
+	public double getUtilizationThreshold() {
 		return utilizationThreshold;
 	}
 
