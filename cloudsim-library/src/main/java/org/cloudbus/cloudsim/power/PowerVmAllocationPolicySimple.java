@@ -38,11 +38,22 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
 	 * 
 	 * @param list the list
 	 */
-	public PowerVmAllocationPolicySimple(List<? extends Host> list) {
+	public PowerVmAllocationPolicySimple(List<? extends PowerHost> list) {
 		super(list);
 	}
 
-        /**
+	public PowerVmAllocationPolicySimple(
+			List<? extends PowerHost> list, boolean oversubscribe) {
+		super(list, oversubscribe);
+	}
+
+	public PowerVmAllocationPolicySimple(
+			List<? extends PowerHost> list,
+			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation) {
+		super(list, suitabilityEvaluation);
+	}
+
+	/**
          * The method doesn't perform any VM allocation optimization
          * and in fact has no effect.
          * @param vmList

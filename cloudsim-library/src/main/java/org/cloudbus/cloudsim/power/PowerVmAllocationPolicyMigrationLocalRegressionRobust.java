@@ -32,32 +32,6 @@ import java.util.List;
  */
 public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 		PowerVmAllocationPolicyMigrationLocalRegression {
-
-	/**
-	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegressionRobust.
-	 * 
-	 * @param hostList the host list
-	 * @param vmSelectionPolicy the vm selection policy
-	 * @param schedulingInterval the scheduling interval
-	 * @param fallbackVmAllocationPolicy the fallback vm allocation policy
-	 * @param utilizationThreshold the utilization threshold
-	 */
-	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
-			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
-			double safetyParameter,
-			double schedulingInterval,
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
-			double utilizationThreshold) {
-		super(
-				hostList,
-				vmSelectionPolicy,
-				safetyParameter,
-				schedulingInterval,
-				fallbackVmAllocationPolicy,
-				utilizationThreshold);
-	}
-
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegressionRobust.
 	 * 
@@ -67,12 +41,31 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 	 * @param fallbackVmAllocationPolicy the fallback vm allocation policy
 	 */
 	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
-			List<? extends Host> hostList,
+			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double safetyParameter,
 			double schedulingInterval,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(hostList, vmSelectionPolicy, safetyParameter, schedulingInterval, fallbackVmAllocationPolicy);
+	}
+
+	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
+			List<? extends PowerHost> list, boolean oversubscribe,
+			PowerVmSelectionPolicy vmSelectionPolicy, double schedulingInterval,
+			double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+		super(list, oversubscribe, vmSelectionPolicy, schedulingInterval, safetyParameter,
+				fallbackVmAllocationPolicy);
+	}
+
+	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
+			List<? extends PowerHost> list,
+			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
+			PowerVmSelectionPolicy vmSelectionPolicy, double schedulingInterval,
+			double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+		super(list, suitabilityEvaluation, vmSelectionPolicy, schedulingInterval, safetyParameter,
+				fallbackVmAllocationPolicy);
 	}
 
 	/**

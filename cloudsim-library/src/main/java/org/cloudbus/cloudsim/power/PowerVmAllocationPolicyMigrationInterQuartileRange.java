@@ -64,7 +64,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 * @param utilizationThreshold the utilization threshold
 	 */
 	public PowerVmAllocationPolicyMigrationInterQuartileRange(
-			List<? extends Host> hostList,
+			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
@@ -82,11 +82,30 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 * @param safetyParameter the safety parameter
 	 */
 	public PowerVmAllocationPolicyMigrationInterQuartileRange(
-			List<? extends Host> hostList,
+			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(hostList, vmSelectionPolicy);
+		setSafetyParameter(safetyParameter);
+		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+	}
+
+	public PowerVmAllocationPolicyMigrationInterQuartileRange(
+			List<? extends PowerHost> list, boolean oversubscribe,
+			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+		super(list, oversubscribe, vmSelectionPolicy);
+		setSafetyParameter(safetyParameter);
+		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+	}
+
+	public PowerVmAllocationPolicyMigrationInterQuartileRange(
+			List<? extends PowerHost> list,
+			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
+			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+		super(list, suitabilityEvaluation, vmSelectionPolicy);
 		setSafetyParameter(safetyParameter);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
 	}

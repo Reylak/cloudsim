@@ -64,31 +64,9 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	 * @param vmSelectionPolicy the vm selection policy
 	 * @param schedulingInterval the scheduling interval
 	 * @param fallbackVmAllocationPolicy the fallback vm allocation policy
-	 * @param utilizationThreshold the utilization threshold
 	 */
 	public PowerVmAllocationPolicyMigrationLocalRegression(
-			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
-			double safetyParameter,
-			double schedulingInterval,
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
-			double utilizationThreshold) {
-		super(hostList, vmSelectionPolicy);
-		setSafetyParameter(safetyParameter);
-		setSchedulingInterval(schedulingInterval);
-		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
-	}
-
-	/**
-	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegression.
-	 * 
-	 * @param hostList the host list
-	 * @param vmSelectionPolicy the vm selection policy
-	 * @param schedulingInterval the scheduling interval
-	 * @param fallbackVmAllocationPolicy the fallback vm allocation policy
-	 */
-	public PowerVmAllocationPolicyMigrationLocalRegression(
-			List<? extends Host> hostList,
+			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double safetyParameter,
 			double schedulingInterval,
@@ -99,7 +77,30 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
 	}
 
-	/**
+    public PowerVmAllocationPolicyMigrationLocalRegression(
+            List<? extends PowerHost> list, boolean oversubscribe,
+            PowerVmSelectionPolicy vmSelectionPolicy, double schedulingInterval,
+            double safetyParameter,
+            PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+        super(list, oversubscribe, vmSelectionPolicy);
+        setSafetyParameter(safetyParameter);
+        setSchedulingInterval(schedulingInterval);
+        setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+    }
+
+    public PowerVmAllocationPolicyMigrationLocalRegression(
+            List<? extends PowerHost> list,
+            PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
+            PowerVmSelectionPolicy vmSelectionPolicy, double schedulingInterval,
+            double safetyParameter,
+            PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+        super(list, suitabilityEvaluation, vmSelectionPolicy);
+        setSafetyParameter(safetyParameter);
+        setSchedulingInterval(schedulingInterval);
+        setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+    }
+
+    /**
 	 * Checks if a host is over utilized.
 	 * 
 	 * @param host the host

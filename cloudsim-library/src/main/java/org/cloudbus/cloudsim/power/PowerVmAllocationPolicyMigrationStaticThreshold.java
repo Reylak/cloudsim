@@ -45,10 +45,25 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	 * @param utilizationThreshold the utilization threshold
 	 */
 	public PowerVmAllocationPolicyMigrationStaticThreshold(
-			List<? extends Host> hostList,
+			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double utilizationThreshold) {
 		super(hostList, vmSelectionPolicy);
+		setUtilizationThreshold(utilizationThreshold);
+	}
+
+	public PowerVmAllocationPolicyMigrationStaticThreshold(
+			List<? extends PowerHost> list, boolean oversubscribe,
+			PowerVmSelectionPolicy vmSelectionPolicy, double utilizationThreshold) {
+		super(list, oversubscribe, vmSelectionPolicy);
+		setUtilizationThreshold(utilizationThreshold);
+	}
+
+	public PowerVmAllocationPolicyMigrationStaticThreshold(
+			List<? extends PowerHost> list,
+			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
+			PowerVmSelectionPolicy vmSelectionPolicy, double utilizationThreshold) {
+		super(list, suitabilityEvaluation, vmSelectionPolicy);
 		setUtilizationThreshold(utilizationThreshold);
 	}
 

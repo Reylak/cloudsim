@@ -33,23 +33,38 @@ import java.util.Map;
  * @since CloudSim Toolkit 3.0
  */
 public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy {
+    public static final boolean OVERSUBSCRIBE_DEFAULT = false;
 
 	/** The map map where each key is a VM id and
          * each value is the host where the VM is placed. */
 	private final Map<String, Host> vmTable = new HashMap<String, Host>();
+
+	/** Represents the test that says a host can host a VM from our point of view.
+	 * If not specified in the constructor, the default behavior is to not oversubscribe. */
+	private PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation;
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyAbstract.
 	 * 
 	 * @param list the list
 	 */
-	public PowerVmAllocationPolicyAbstract(List<? extends Host> list) {
-		super(list);
+	public PowerVmAllocationPolicyAbstract(List<? extends PowerHost> list) {
+		this(list, OVERSUBSCRIBE_DEFAULT);
 	}
+
+	public PowerVmAllocationPolicyAbstract(List<? extends PowerHost> list, boolean oversubscribe) {
+	    this(list, oversubscribe ? new PowerHostSuitabilityEvaluationOversubscription() :
+                   new PowerHostSuitabilityEvaluationNoOversubscription());
+    }
+
+    public PowerVmAllocationPolicyAbstract(List<? extends PowerHost> list, PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation) {
+	    super(list);
+	    this.suitabilityEvaluation = suitabilityEvaluation;
+    }
 
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
-		return allocateHostForVm(vm, findHostForVm(vm));
+		return allocateHostForVm(vm, findHostForVm((PowerVm)vm));
 	}
 
 	@Override
@@ -59,7 +74,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 			return false;
 		}
 
-		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host
+		if (host.vmCreate(vm)) { // if vm has been successfully created in the host
 			getVmTable().put(vm.getUid(), host);
 			return true;
 		}
@@ -73,7 +88,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	 * @param vm the vm to find a host for it
 	 * @return the first host found that can host the VM
 	 */
-	public PowerHost findHostForVm(Vm vm) {
+	public PowerHost findHostForVm(PowerVm vm) {
 		for (PowerHost host : this.<PowerHost> getHostList()) {
 			if (isHostSuitableForVm(host, vm))
 				return host;
@@ -81,10 +96,8 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 		return null;
 	}
 
-    public boolean isHostSuitableForVm(PowerHost host, Vm vm) {
-        return host.getTotalMips() - host.getVmList().stream().mapToDouble(Vm::getTotalMips).sum() >= vm.getTotalMips() &&
-                host.getRamProvisioner().isSuitableForVm(vm, vm.getRam()) &&
-                host.getBwProvisioner().isSuitableForVm(vm, vm.getBw());
+    public boolean isHostSuitableForVm(PowerHost host, PowerVm vm) {
+        return suitabilityEvaluation.isHostSuitable(host, vm);
     }
 
 	@Override

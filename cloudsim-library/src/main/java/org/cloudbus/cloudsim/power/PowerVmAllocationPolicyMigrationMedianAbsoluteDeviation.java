@@ -71,32 +71,31 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
 	 * @param safetyParameter the safety parameter
-	 * @param utilizationThreshold the utilization threshold
 	 */
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
-			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
-			double safetyParameter,
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
-			double utilizationThreshold) {
+			List<? extends PowerHost> hostList,
+			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(hostList, vmSelectionPolicy);
 		setSafetyParameter(safetyParameter);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
 	}
 
-	/**
-	 * Instantiates a new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation.
-	 * 
-	 * @param hostList the host list
-	 * @param vmSelectionPolicy the vm selection policy
-	 * @param safetyParameter the safety parameter
-	 */
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
-			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
-			double safetyParameter,
+			List<? extends PowerHost> list, boolean oversubscribe,
+			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
-		super(hostList, vmSelectionPolicy);
+		super(list, oversubscribe, vmSelectionPolicy);
+		setSafetyParameter(safetyParameter);
+		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+	}
+
+	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
+			List<? extends PowerHost> list,
+			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
+			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
+		super(list, suitabilityEvaluation, vmSelectionPolicy);
 		setSafetyParameter(safetyParameter);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
 	}
