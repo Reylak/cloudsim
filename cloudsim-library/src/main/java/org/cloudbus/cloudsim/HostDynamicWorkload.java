@@ -77,7 +77,7 @@ public class HostDynamicWorkload extends Host {
 			double totalMips = vm.getTotalMips();
 
 			if (getLogger().isInfoEnabled()) {
-				getLogger().info("MIps allocation of VM {}: {}/{} [{}], requested {} (got {})",
+				getLogger().debug("MIps allocation of VM {}: {}/{} [{}], requested {} (got {})",
 						vm,
 						String.format("%.2f", totalAllocatedMips),
 						String.format("%.2f", totalMips),
@@ -89,11 +89,11 @@ public class HostDynamicWorkload extends Host {
 				String mipsPerPe = getVmScheduler().getPesAllocatedForVM(vm).stream()
 						.map(pe -> "<" + pe + "> " + String.format("%.2f", pe.getPeProvisioner().getTotalAllocatedMipsForVm(vm)))
 						.collect(Collectors.joining(", "));
-				getLogger().info("MIps allocation of VM {} per PE: {}", vm, mipsPerPe);
+				getLogger().debug("MIps allocation of VM {} per PE: {}", vm, mipsPerPe);
 			}
 
 			if (getVmsMigratingIn().contains(vm)) {
-				getLogger().info("VM {} is migrating in", vm);
+				getLogger().debug("VM {} is migrating in", vm);
 				/* Nothing useful to do. */
 			} else {
 				double missingMips = totalRequestedMips - totalAllocatedMips;
@@ -110,7 +110,7 @@ public class HostDynamicWorkload extends Host {
 						(vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
 
 				if (vm.isInMigration()) {
-					getLogger().info("VM {} is migrating out", vm);
+					getLogger().debug("VM {} is migrating out", vm);
 					totalAllocatedMips /= 0.9; // performance degradation due to migration - 10%
 				}
 			}
