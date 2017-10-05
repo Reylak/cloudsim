@@ -134,7 +134,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 			for (double mips : entry.getValue()) {
 				if (availableMips == 0 && !peIterator.hasNext()) {
-					getLogger().error("failed allocating PEs to VM {}: not enough MIps", vmUid);
+					getLogger().warn("failed allocating PEs to VM {}: not enough MIps", vmUid);
 					break;
 				}
 				while (mips >= 0.1) {
