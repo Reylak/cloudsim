@@ -92,10 +92,7 @@ public class HostDynamicWorkload extends Host {
 				getLogger().trace("MIps allocation of VM {} per PE: {}", vm, mipsPerPe);
 			}
 
-			if (getVmsMigratingIn().contains(vm)) {
-				getLogger().debug("VM {} is migrating in", vm);
-				/* Nothing useful to do. */
-			} else {
+			if (!getVmsMigratingIn().contains(vm)) {
 				double missingMips = totalRequestedMips - totalAllocatedMips;
 				if (missingMips > 0.1)
 					getLogger().info("VM {} is underallocated: {} MIps ({}) couldn't be allocated", vm,
@@ -109,10 +106,8 @@ public class HostDynamicWorkload extends Host {
 						totalRequestedMips,
 						(vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
 
-				if (vm.isInMigration()) {
-					getLogger().debug("VM {} is migrating out", vm);
+				if (vm.isInMigration())
 					totalAllocatedMips /= 0.9; // performance degradation due to migration - 10%
-				}
 			}
 
 			setUtilizationMips(getUtilizationMips() + totalAllocatedMips);
