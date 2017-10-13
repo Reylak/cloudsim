@@ -127,6 +127,7 @@ public class NetDatacenterBroker extends SimEntity {
 		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 
+		getLogger().setPrefix("broker {}: ");
 	}
 
 	/**
@@ -285,11 +286,11 @@ public class NetDatacenterBroker extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			getLogger().warn("received null event");
+			getLogger().debug("received null event");
 			return;
 		}
 
-		getLogger().warn("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
+		getLogger().debug("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
 	}
 
 	/**

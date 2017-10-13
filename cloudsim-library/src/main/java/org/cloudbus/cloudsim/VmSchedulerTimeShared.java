@@ -41,7 +41,8 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 */
 	public VmSchedulerTimeShared(List<? extends Pe> pelist) {
 		super(pelist);
-		setMipsMapRequested(new HashMap<String, List<Double>>());
+		setMipsMapRequested(new HashMap<>());
+		getLogger().setPrefix("Vm sched. (time shared): ");
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 			for (double mips : entry.getValue()) {
 				if (availableMips == 0 && !peIterator.hasNext()) {
-					getLogger().warn("failed allocating PEs to VM {}: not enough MIps", vmUid);
+					getLogger().info("failed allocating PEs to VM {}: not enough MIps", vmUid);
 					break;
 				}
 				while (mips >= 0.1) {

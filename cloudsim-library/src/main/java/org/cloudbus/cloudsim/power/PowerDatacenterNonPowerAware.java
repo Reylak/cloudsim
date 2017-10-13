@@ -79,11 +79,11 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 				}
 			}
 
-			if (getLogger().isInfoEnabled()) {
+			if (getLogger().isTraceEnabled()) {
 				String hostCpuUsage = this.<PowerHost>getHostList().stream()
 						.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
 						.collect(Collectors.joining(", "));
-				getLogger().info("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
+				getLogger().trace("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
 			}
 
 			StringJoiner hostPowerUsageJoiner = new StringJoiner(", ");
@@ -97,7 +97,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", hostPower));
 			}
 
-			getLogger().info("hosts power usage for time frame {}: {}",
+			getLogger().trace("hosts power usage for time frame {}: {}",
 					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
 					hostPowerUsageJoiner);
 
@@ -127,9 +127,9 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 					PowerHost oldHost = (PowerHost) vm.getHost();
 
 					if (oldHost == null)
-						getLogger().info("started migrating VM {} to host {}", vm, targetHost);
+						getLogger().debug("started migrating VM {} to host {}", vm, targetHost);
 					else
-						getLogger().info("started migrating VM {} from host {} to host {}", vm, oldHost, targetHost);
+						getLogger().debug("started migrating VM {} from host {} to host {}", vm, oldHost, targetHost);
 
 					targetHost.addMigratingInVm(vm);
 					incrementMigrationCount();

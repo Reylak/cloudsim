@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public abstract class VmAllocationPolicy {
 	/** The host list. */
 	private List<? extends Host> hostList;
 
-	private Logger logger;
+	private PrefixedLogger logger;
 
 	/**
 	 * Creates a new VmAllocationPolicy object.
@@ -40,7 +41,8 @@ public abstract class VmAllocationPolicy {
 	 */
 	public VmAllocationPolicy(List<? extends Host> list) {
 		setHostList(list);
-		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.logger = new PrefixedLogger(LoggerFactory.getLogger(this.getClass()),
+				"VM alloc.: ");
 	}
 
 	/**
@@ -128,7 +130,7 @@ public abstract class VmAllocationPolicy {
 		return (List<T>) hostList;
 	}
 
-	public Logger getLogger() {
+	public PrefixedLogger getLogger() {
 		return this.logger;
 	}
 }

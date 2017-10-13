@@ -70,7 +70,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	@Override
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host == null) {
-			getLogger().error("failed allocating VM {} to a host: got null host", vm);
+			getLogger().info("no host to allocate VM {} to", vm);
 			return false;
 		}
 

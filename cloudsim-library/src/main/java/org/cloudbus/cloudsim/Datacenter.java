@@ -89,7 +89,7 @@ public class Datacenter extends SimEntity {
 		// stores id of this class
 		getCharacteristics().setId(super.getId());
 
-		this.getLogger().setPrefix("datacenter {}: ");
+		getLogger().setPrefix("datacenter {}: ");
 	}
 
 	/**
@@ -678,8 +678,8 @@ public class Datacenter extends SimEntity {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				getLogger().warn("reshly submitted cloudlet {}, owned by {}, is already completed; it won't be executed",
-						cl.getCloudletId(), name);
+				getLogger().info("freshly submitted cloudlet {}, owned by {}, is already completed; "
+								+ "it won't be executed", cl.getCloudletId(), name);
 
 				// NOTE: If a Cloudlet has finished, then it won't be processed.
 				// So, if ack is required, this method sends back a result.

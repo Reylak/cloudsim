@@ -39,10 +39,7 @@ public class SanStorage extends HarddriveStorage {
 	 */
 	public SanStorage(double capacity, double bandwidth, double networkLatency) throws ParameterException {
 		super(capacity);
-		this.bandwidth = bandwidth;
-		this.networkLatency = networkLatency;
-
-		getLogger().setPrefix("SAN drive {}: ");
+		init(bandwidth, networkLatency);
 	}
 
 	/**
@@ -58,6 +55,10 @@ public class SanStorage extends HarddriveStorage {
 	public SanStorage(String name, double capacity, double bandwidth, double networkLatency)
 			throws ParameterException {
 		super(name, capacity);
+		init(bandwidth, networkLatency);
+	}
+
+	private void init(double bandwidth, double networkLatency) {
 		this.bandwidth = bandwidth;
 		this.networkLatency = networkLatency;
 

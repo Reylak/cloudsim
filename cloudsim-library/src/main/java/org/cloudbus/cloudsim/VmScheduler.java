@@ -8,6 +8,7 @@
 package org.cloudbus.cloudsim;
 
 import org.cloudbus.cloudsim.lists.PeList;
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public abstract class VmScheduler {
 	/** The VMs migrating out the host (departing). It is the list of VM ids */
 	private List<String> vmsMigratingOut;
 
-	private Logger logger;
+	private PrefixedLogger logger;
 
 	/**
 	 * Creates a new VmScheduler.
@@ -75,7 +76,8 @@ public abstract class VmScheduler {
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		setVmsMigratingIn(new ArrayList<String>());
 		setVmsMigratingOut(new ArrayList<String>());
-		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.logger = new PrefixedLogger(LoggerFactory.getLogger(this.getClass()),
+				"VM sched.: ");
 	}
 
 	/**
@@ -163,10 +165,8 @@ public abstract class VmScheduler {
 	 * @return max mips
 	 */
 	public double getMaxAvailableMips() {
-		if (getPeList() == null) {
-			getLogger().warn("no PE available");
+		if (getPeList() == null)
 			return 0;
-		}
 
 		double max = 0.0;
 		for (Pe pe : getPeList()) {
@@ -188,10 +188,9 @@ public abstract class VmScheduler {
          * received by the VmScheduler can be heterogeneous PEs.
 	 */
 	public double getPeCapacity() {
-		if (getPeList() == null) {
-			getLogger().warn("no PE available");
+		if (getPeList() == null)
 			return 0;
-		}
+
 		return getPeList().get(0).getMips();
 	}
 
@@ -308,7 +307,7 @@ public abstract class VmScheduler {
 		this.peMap = peMap;
 	}
 
-	public Logger getLogger() {
+	public PrefixedLogger getLogger() {
 		return this.logger;
 	}
 }

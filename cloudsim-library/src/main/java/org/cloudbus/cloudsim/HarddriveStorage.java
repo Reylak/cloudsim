@@ -9,7 +9,7 @@
 package org.cloudbus.cloudsim;
 
 import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
-import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class HarddriveStorage implements Storage {
 	private double avgSeekTime;
 
 	/** The logger used by the entity to log its own log messages. */
-	private EntityPrefixedLogger logger;
+	private PrefixedLogger logger;
 
 	/**
 	 * Creates a new hard drive storage with a given name and capacity.
@@ -82,7 +82,8 @@ public class HarddriveStorage implements Storage {
 		this.capacity = capacity;
 		init();
 
-		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "hard drive {}: ", this);
+		this.logger = new PrefixedLogger(LoggerFactory.getLogger(this.getClass()),
+				"hard drive {}: ", this);
 	}
 
 	/**
@@ -93,14 +94,7 @@ public class HarddriveStorage implements Storage {
 	 * @throws ParameterException when the capacity is not valid
 	 */
 	public HarddriveStorage(double capacity) throws ParameterException {
-		if (capacity <= 0) {
-			throw new ParameterException("HarddriveStorage(): Error - capacity <= 0.");
-		}
-		name = "HarddriveStorage";
-		this.capacity = capacity;
-		init();
-
-		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "hard drive {}: ", this);
+		this("HarddriveStorage", capacity);
 	}
 
 	/**
@@ -298,7 +292,7 @@ public class HarddriveStorage implements Storage {
 		// check first whether file name is valid or not
 		File obj = null;
 		if (fileName == null || fileName.length() == 0) {
-			getLogger().error("invalid filename {}", fileName);
+			getLogger().warn("invalid filename {}", fileName);
 			return obj;
 		}
 
@@ -377,28 +371,18 @@ public class HarddriveStorage implements Storage {
 
 	/**
 	 * Check if the file is valid or not. This method checks whether the given file or the file name
-	 * of the file is valid. The method name parameter is used for debugging purposes, to output in
-	 * which method an error has occurred.
+	 * of the file is valid.
 	 * 
 	 * @param file the file to be checked for validity
-	 * @param methodName the name of the method in which we check for validity of the file
 	 * @return <tt>true</tt> if the file is valid, <tt>false</tt> otherwise
 	 */
-	private boolean isFileValid(File file, String methodName) {
-
-		if (file == null) {
-			getLogger().debug("file is null");
+	private boolean isFileValid(File file) {
+		if (file == null)
 			return false;
-		}
 
 		String fileName = file.getName();
-		if (fileName == null || fileName.length() == 0) {
-			getLogger().debug("invalid filename for file {}");
-			return false;
-		}
-
-		return true;
-	}
+        return fileName != null && fileName.length() != 0;
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -413,13 +397,12 @@ public class HarddriveStorage implements Storage {
 	public double addFile(File file) {
 		double result = 0.0;
 		// check if the file is valid or not
-		if (!isFileValid(file, "addFile()")) {
+		if (!isFileValid(file))
 			return result;
-		}
 
 		// check the capacity
 		if (file.getSize() + currentSize > capacity) {
-			getLogger().error("not enough space to store file {}", file);
+			getLogger().info("not enough space to store file {}", file);
 			return result;
 		}
 
@@ -487,9 +470,9 @@ public class HarddriveStorage implements Storage {
 	public double deleteFile(File file) {
 		double result = 0.0;
 		// check if the file is valid or not
-		if (!isFileValid(file, "deleteFile()")) {
+		if (!isFileValid(file))
 			return result;
-		}
+
 		double seekTime = getSeekTime(file.getSize());
 		double transferTime = getTransferTime(file.getSize());
 
@@ -506,31 +489,12 @@ public class HarddriveStorage implements Storage {
 
 	@Override
 	public boolean contains(String fileName) {
-		boolean result = false;
-		if (fileName == null || fileName.length() == 0) {
-			return result;
-		}
-		// check each file in the list
-		Iterator<String> it = nameList.iterator();
-		while (it.hasNext()) {
-			String name = it.next();
-			if (name.equals(fileName)) {
-				result = true;
-				break;
-			}
-		}
-		return result;
+        return fileName != null && fileName.length() != 0 && nameList.contains(fileName);
 	}
 
 	@Override
 	public boolean contains(File file) {
-		boolean result = false;
-		if (!isFileValid(file, "contains()")) {
-			return result;
-		}
-
-		result = contains(file.getName());
-		return result;
+		return isFileValid(file) && contains(file.getName());
 	}
 
 	@Override
@@ -566,7 +530,7 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	public EntityPrefixedLogger getLogger() {
+	public PrefixedLogger getLogger() {
 		return this.logger;
 	}
 

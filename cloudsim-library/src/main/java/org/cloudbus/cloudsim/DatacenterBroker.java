@@ -224,11 +224,13 @@ public class DatacenterBroker extends SimEntity {
 
 		if (result == CloudSimTags.TRUE) {
 			if (vm == null)
-				getLogger().warn("received ACK for creation of VM with ID {} that is not known; ignoring", vmId);
+				getLogger().debug("received ACK for creation of VM with ID {} that is not known; "
+						+ "ignoring", vmId);
 			else {
 				getVmsToDatacentersMap().put(vmId, datacenterId);
 				getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
-				getLogger().info("created VM {} on host {} of datacenter {}", vm, vm.getHost(), datacenter);
+				getLogger().info("created VM {} on host {} of datacenter {}", vm, vm.getHost(),
+                        datacenter);
 			}
 		} else {
 			getLogger().error("failed creating VM {} in datacenter {}", vm, datacenter);
@@ -255,7 +257,6 @@ public class DatacenterBroker extends SimEntity {
 					submitCloudlets();
 				} else { // no vms created. abort
 					getLogger().error("no VM was created; aborting");
-
 					finishExecution();
 				}
 			}
@@ -302,11 +303,11 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			getLogger().warn("received null event");
+			getLogger().debug("received null event");
 			return;
 		}
 
-		getLogger().warn("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
+		getLogger().debug("received unknown event {} from entity {}", ev.getTag(), CloudSim.getEntity(ev.getSource()));
 	}
 
 	/**
@@ -355,7 +356,7 @@ public class DatacenterBroker extends SimEntity {
 			} else { // submit to the specific vm
 				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
-					getLogger().warn("postponing submission of cloudlet {}: bound VM {} not available",
+					getLogger().info("postponing submission of cloudlet {}: bound VM {} not available",
 							cloudlet, VmList.getById(this.getVmList(), cloudlet.getVmId()));
 					continue;
 				}

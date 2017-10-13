@@ -76,9 +76,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
-		super(hostList, vmSelectionPolicy);
-		setSafetyParameter(safetyParameter);
-		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+		this(hostList, OVERSUBSCRIBE_DEFAULT, vmSelectionPolicy, safetyParameter, fallbackVmAllocationPolicy);
 	}
 
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
@@ -86,8 +84,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(list, oversubscribe, vmSelectionPolicy);
-		setSafetyParameter(safetyParameter);
-		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+		init(safetyParameter, fallbackVmAllocationPolicy);
 	}
 
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
@@ -96,8 +93,13 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 			PowerVmSelectionPolicy vmSelectionPolicy, double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(list, suitabilityEvaluation, vmSelectionPolicy);
+		init(safetyParameter, fallbackVmAllocationPolicy);
+	}
+
+	private void init(double safetyParameter, PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		setSafetyParameter(safetyParameter);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
+		getLogger().setPrefix("VM Alloc. (migration, MAD): ");
 	}
 
 	/**

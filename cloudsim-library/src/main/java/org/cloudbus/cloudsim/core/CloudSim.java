@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.core;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
 import org.cloudbus.cloudsim.core.predicates.PredicateAny;
 import org.cloudbus.cloudsim.core.predicates.PredicateNone;
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,8 @@ public class CloudSim {
 	/** The minimal time between events. Events within shorter periods after the last event are discarded. */
 	private static double minTimeBetweenEvents = 0.1;
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger logger = new PrefixedLogger(
+	        LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()), "simulator: ");
 	
 	/**
 	 * Initialises all the common attributes.
@@ -117,6 +119,7 @@ public class CloudSim {
 			cisId = cis.getId();
 		} catch (Exception e) {
 			getLogger().error("failed initializing simulation", e);
+			System.exit(1);
 		}
 	}
 
@@ -503,7 +506,6 @@ public class CloudSim {
 		SimEntity ent;
 		boolean queue_empty;
 
-		getLogger().info("");
 		getLogger().info("SIMULATION DATE: {}", String.format("%.3f", clock()));
 		
 		int entities_size = entities.size();

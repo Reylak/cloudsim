@@ -11,7 +11,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
-import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class Host {
 	private Datacenter datacenter;
 
 	/** The logger used by the entity to log its own log messages. */
-	private EntityPrefixedLogger logger;
+	private PrefixedLogger logger;
 
 	/**
 	 * Instantiates a new host.
@@ -89,7 +89,8 @@ public class Host {
 		setPeList(peList);
 		setFailed(false);
 
-		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "host {}: ", this);
+		this.logger = new PrefixedLogger(LoggerFactory.getLogger(this.getClass()),
+                "host {}: ", this);
 	}
 
 	/**
@@ -598,7 +599,7 @@ public class Host {
 		this.datacenter = datacenter;
 	}
 
-	public EntityPrefixedLogger getLogger() {
+	public PrefixedLogger getLogger() {
 		return this.logger;
 	}
 

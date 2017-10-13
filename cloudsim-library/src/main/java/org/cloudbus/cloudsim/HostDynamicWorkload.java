@@ -76,8 +76,8 @@ public class HostDynamicWorkload extends Host {
 			double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(vm);
 			double totalMips = vm.getTotalMips();
 
-			if (getLogger().isInfoEnabled()) {
-				getLogger().debug("MIps allocation of VM {}: {}/{} [{}], requested {} (got {})",
+			if (getLogger().isTraceEnabled()) {
+				getLogger().trace("MIps allocation of VM {}: {}/{} [{}], requested {} (got {})",
 						vm,
 						String.format("%.2f", totalAllocatedMips),
 						String.format("%.2f", totalMips),
@@ -89,7 +89,7 @@ public class HostDynamicWorkload extends Host {
 				String mipsPerPe = getVmScheduler().getPesAllocatedForVM(vm).stream()
 						.map(pe -> "<" + pe + "> " + String.format("%.2f", pe.getPeProvisioner().getTotalAllocatedMipsForVm(vm)))
 						.collect(Collectors.joining(", "));
-				getLogger().debug("MIps allocation of VM {} per PE: {}", vm, mipsPerPe);
+				getLogger().trace("MIps allocation of VM {} per PE: {}", vm, mipsPerPe);
 			}
 
 			if (getVmsMigratingIn().contains(vm)) {

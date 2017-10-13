@@ -153,8 +153,8 @@ public class NetworkDatacenter extends Datacenter {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				getLogger().warn("reshly submitted cloudlet {}, owned by {}, is already completed; it won't be executed",
-						cl.getCloudletId(), name);
+				getLogger().debug("freshly submitted cloudlet {}, owned by {}, is already completed; "
+								+ " it won't be executed", cl.getCloudletId(), name);
 
 				// NOTE: If a Cloudlet has finished, then it won't be processed.
 				// So, if ack is required, this method sends back a result.

@@ -10,7 +10,7 @@ package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.NetworkTopology;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
-import org.cloudbus.cloudsim.util.EntityPrefixedLogger;
+import org.cloudbus.cloudsim.util.PrefixedLogger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -48,7 +48,7 @@ public abstract class SimEntity implements Cloneable {
 	private int state;
 
 	/** The logger used by the entity to log its own log messages. */
-	private EntityPrefixedLogger logger;
+	private PrefixedLogger logger;
 
 	/**
 	 * Creates a new entity.
@@ -56,7 +56,7 @@ public abstract class SimEntity implements Cloneable {
 	 * @param name the name to be associated with the entity
 	 */
 	public SimEntity(String name) {
-		if (name.indexOf(" ") != -1) {
+		if (name.contains(" ")) {
 			throw new IllegalArgumentException("Entity names can't contain spaces.");
 		}
 		this.name = name;
@@ -64,7 +64,8 @@ public abstract class SimEntity implements Cloneable {
 		state = RUNNABLE;
 		CloudSim.addEntity(this);
 
-		this.logger = new EntityPrefixedLogger(LoggerFactory.getLogger(this.getClass()), "{}: ", this);
+		this.logger = new PrefixedLogger(LoggerFactory.getLogger(this.getClass()),
+				"{}: ", this);
 	}
 
 	/**
@@ -689,7 +690,7 @@ public abstract class SimEntity implements Cloneable {
 		return 0.0;
 	}
 
-	public EntityPrefixedLogger getLogger() {
+	public PrefixedLogger getLogger() {
 		return this.logger;
 	}
 

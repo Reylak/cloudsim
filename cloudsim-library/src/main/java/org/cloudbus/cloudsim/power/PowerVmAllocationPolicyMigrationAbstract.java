@@ -97,15 +97,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	public PowerVmAllocationPolicyMigrationAbstract(
 			List<? extends PowerHost> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy) {
-		super(hostList);
-		setVmSelectionPolicy(vmSelectionPolicy);
+		this(hostList, OVERSUBSCRIBE_DEFAULT, vmSelectionPolicy);
 	}
 
 	public PowerVmAllocationPolicyMigrationAbstract(
 			List<? extends PowerHost> list, boolean oversubscribe,
 			PowerVmSelectionPolicy vmSelectionPolicy) {
 		super(list, oversubscribe);
-		setVmSelectionPolicy(vmSelectionPolicy);
+		init(vmSelectionPolicy);
 	}
 
 	public PowerVmAllocationPolicyMigrationAbstract(
@@ -113,7 +112,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			PowerHostSuitabilityEvaluationAbstract suitabilityEvaluation,
 			PowerVmSelectionPolicy vmSelectionPolicy) {
 		super(list, suitabilityEvaluation);
+		init(vmSelectionPolicy);
+	}
+
+	private void init(PowerVmSelectionPolicy vmSelectionPolicy) {
 		setVmSelectionPolicy(vmSelectionPolicy);
+		getLogger().setPrefix("VM alloc. (migration): ");
 	}
 
 	/**
@@ -133,7 +137,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 				ExecutionTimeMeasurer.end("optimizeAllocationHostSelection"));
 
 		getLogger().debug("overused hosts: {}",
-				overUtilizedHosts.stream().map(Object::toString).collect(Collectors.joining(", ")));
+                overUtilizedHosts.stream()
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", ")));
 
 		saveAllocation();
 
@@ -322,7 +328,8 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 
 				migrationMap.put(vm, allocatedHost);
 			} else {
-				getLogger().debug("failed relocating all VMs from underused host {}; cancelling relocation", vm.getHost());
+				getLogger().debug("failed relocating all VMs from underused host {}; cancelling "
+                        + "relocation", vm.getHost());
 
 				for (Map.Entry<PowerVm, PowerHost> entry: migrationMap.entrySet())
 					entry.getValue().vmDestroy(entry.getKey());

@@ -58,7 +58,6 @@ public class PowerDatacenter extends Datacenter {
 	 * @param schedulingInterval the scheduling interval
 	 * @param vmAllocationPolicy the vm provisioner
 	 * @param storageList the storage list
-	 * @throws Exception the exception
 	 */
 	public PowerDatacenter(
 			String name,
@@ -164,11 +163,11 @@ public class PowerDatacenter extends Datacenter {
 			}
 		}
 
-		if (getLogger().isDebugEnabled()) {
+		if (getLogger().isTraceEnabled()) {
 			String hostCpuUsage = this.<PowerHost>getHostList().stream()
 					.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
 					.collect(Collectors.joining(", "));
-			getLogger().debug("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
+			getLogger().trace("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
 		}
 
 		if (timeDiff > 0) {
@@ -181,7 +180,7 @@ public class PowerDatacenter extends Datacenter {
 				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", timeFrameHostEnergy));
 			}
 
-			getLogger().debug("hosts power usage for time frame {}: {}",
+			getLogger().trace("hosts power usage for time frame {}: {}",
 					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
 					hostPowerUsageJoiner);
 		}
