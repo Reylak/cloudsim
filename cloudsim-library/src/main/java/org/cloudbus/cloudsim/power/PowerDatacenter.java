@@ -81,7 +81,6 @@ public class PowerDatacenter extends Datacenter {
 			return;
 		}
 		double currentTime = CloudSim.clock();
-        double timeFrameDatacenterEnergy = 0.0;
 
 		// if some time passed since last processing
 		if (currentTime > getLastProcessTime()) {
@@ -116,33 +115,6 @@ public class PowerDatacenter extends Datacenter {
 							CloudSimTags.VM_MIGRATE, eventParam);
 				}
 			}
-
-			if (getLogger().isTraceEnabled()) {
-				String hostCpuUsage = this.<PowerHost>getHostList().stream()
-						.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
-						.collect(Collectors.joining(", "));
-				getLogger().trace("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
-			}
-
-			StringJoiner hostPowerUsageJoiner = new StringJoiner(", ");
-
-			for (PowerHost host : this.<PowerHost>getHostList()) {
-				double timeFrameHostEnergy = host.getEnergyConsumption(this.getLastProcessTime(), currentTime - 1);
-				timeFrameDatacenterEnergy += timeFrameHostEnergy;
-
-				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", timeFrameHostEnergy));
-			}
-
-			getLogger().trace("hosts power usage for time frame {}: {}",
-					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
-					hostPowerUsageJoiner);
-
-			getLogger().info("total power usage for time frame {}: {}",
-					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
-					String.format("%.2fWs", timeFrameDatacenterEnergy));
-
-			setPower(getPower() + timeFrameDatacenterEnergy);
-
 			// ensure a minimal time between simulation events
 			minTime = Math.max(minTime, CloudSim.clock() + CloudSim.getMinTimeBetweenEvents() + 0.01);
 			// set time of next event to scheduling date, or to date of next event if closer
@@ -181,6 +153,8 @@ public class PowerDatacenter extends Datacenter {
 	protected double updateCloudetProcessingWithoutSchedulingFutureEventsForce() {
 		double currentTime = CloudSim.clock();
 		double minTime = Double.MAX_VALUE;
+		double timeDiff = currentTime - getLastProcessTime();
+		double timeFrameDatacenterEnergy = 0.0;
 
 		for (PowerHost host : this.<PowerHost> getHostList()) {
 			double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
@@ -188,6 +162,34 @@ public class PowerDatacenter extends Datacenter {
 				minTime = time;
 			}
 		}
+
+		if (getLogger().isTraceEnabled()) {
+			String hostCpuUsage = this.<PowerHost>getHostList().stream()
+					.map(host -> "<" + host + "> " + String.format("%.2f%%", host.getUtilizationOfCpu() * 100))
+					.collect(Collectors.joining(", "));
+			getLogger().trace("hosts CPU usage at {}: {}", String.format("%.3f", currentTime), hostCpuUsage);
+		}
+
+		if (timeDiff > 0) {
+			StringJoiner hostPowerUsageJoiner = new StringJoiner(", ");
+
+			for (PowerHost host : this.<PowerHost>getHostList()) {
+				double timeFrameHostEnergy = host.getEnergyConsumption(this.getLastProcessTime(), currentTime - 1);
+				timeFrameDatacenterEnergy += timeFrameHostEnergy;
+
+				hostPowerUsageJoiner.add("<" + host + "> " + String.format("%.2fWs", timeFrameHostEnergy));
+			}
+
+			getLogger().trace("hosts power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					hostPowerUsageJoiner);
+		}
+
+		getLogger().info("total power usage for time frame {}: {}",
+					String.format("[%.3f, %.3f]", this.getLastProcessTime(), currentTime),
+					String.format("%.2fWs", timeFrameDatacenterEnergy));
+
+		setPower(getPower() + timeFrameDatacenterEnergy);
 
 		checkCloudletCompletion();
 
