@@ -70,6 +70,14 @@ public class HostDynamicWorkload extends Host {
 		for (Vm vm : getVmList()) {
 			getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips());
 		}
+        if (getLogger().isDebugEnabled()) {
+            String vms = getVmList().stream()
+                    .filter(v -> !v.isInMigration())
+                    .map(Vm::toString)
+                    .collect(Collectors.joining(", "));
+            if (!vms.isEmpty())
+                getLogger().debug("non migrating VMs: {}", vms);
+        }
 
 		for (Vm vm : getVmList()) {
 			double totalRequestedMips = vm.getCurrentRequestedTotalMips();
