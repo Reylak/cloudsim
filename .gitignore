@@ -1,6 +1,11 @@
 target/
 
 *.iml
-/.idea/workspace.xml
-/.idea/dictionaries/
-/.idea/libraries/
+**/.idea/workspace.xml
+**/.idea/dictionaries/
+**/.idea/libraries/
+**/.idea/codeStyleSettings.xml
+**/.idea/compiler.xml
+**/.idea/encodings.xml
+**/.idea/misc.xml
+**/.idea/modules.xml
