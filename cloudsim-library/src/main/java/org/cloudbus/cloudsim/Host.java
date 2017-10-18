@@ -156,8 +156,6 @@ public class Host {
 
 			getVmsMigratingIn().add(vm);
 			getVmList().add(vm);
-			updateVmsProcessing(CloudSim.clock());
-			vm.getHost().updateVmsProcessing(CloudSim.clock());
 		}
 	}
 

@@ -14,10 +14,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -88,11 +85,14 @@ public class PowerDatacenter extends Datacenter {
 
 			if (!isDisableMigrations()) {
 				Map<? extends Vm, ? extends Host> migrationMap = getVmAllocationPolicy().optimizeAllocation(getVmList());
+                Set<PowerHost> hostsToUpdate = new HashSet<>();
 
 				for (Map.Entry<? extends Vm, ? extends Host> entry : migrationMap.entrySet()) {
 					Vm vm = entry.getKey();
-					PowerHost targetHost = (PowerHost) entry.getValue();
-					PowerHost oldHost = (PowerHost) vm.getHost();
+                    PowerHost oldHost = (PowerHost) vm.getHost();
+                    hostsToUpdate.add(oldHost);
+                    PowerHost targetHost = (PowerHost) entry.getValue();
+                    hostsToUpdate.add(targetHost);
 
 					if (oldHost == null)
 						getLogger().debug("started migrating VM {} to host {}", vm, targetHost);
@@ -114,6 +114,10 @@ public class PowerDatacenter extends Datacenter {
 							vm.getRam() / ((double) targetHost.getBw() / (2 * 8)),
 							CloudSimTags.VM_MIGRATE, eventParam);
 				}
+
+				/* Update affected hosts after having treated every migration */
+				for (PowerHost host: hostsToUpdate)
+				    host.updateVmsProcessing(currentTime);
 			}
 			// ensure a minimal time between simulation events
 			minTime = Math.max(minTime, CloudSim.clock() + CloudSim.getMinTimeBetweenEvents() + 0.01);
